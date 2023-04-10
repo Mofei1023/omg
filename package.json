@@ -2,12 +2,11 @@
   "name": "midterm-website",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "Mofei1023 <71375565+Mofei1023@users.noreply.github.com>",
+  "author": "doraeric <benson.doraemon@gmail.com>",
   "license": "MIT",
-    "scripts": {
+  "scripts": {
     "start": "cd backend && yarn start",
     "build": "cd frontend && yarn build",
     "install:all": "cd frontend && yarn install --production=false && cd ../backend && yarn"
-    }
-  
+  }
 }

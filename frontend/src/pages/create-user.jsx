@@ -4,7 +4,7 @@ import services from "../services";
 
 // you should design your register page and api
 function CreateUserPage() {
-  const [formData, setFormData] = useState({ username: "" });
+  const [formData, setFormData] = useState({ username: "",password: "" });
   const [message, setMessage] = useState("");
 
   /** @type {React.ChangeEventHandler<HTMLInputElement>} */
@@ -19,10 +19,10 @@ function CreateUserPage() {
 
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleFormSubmit = (event) => {
-    services.user.createOne({ name: formData.username }).then((data) => {
+    services.user.createOne({ name: formData.username , pwd: formData.password}).then((data) => {
       setMessage(JSON.stringify(data, null, 2));
     });
-    setFormData({ username: "" });
+    setFormData({ username: "" , password: ""});
     event.preventDefault();
   };
 

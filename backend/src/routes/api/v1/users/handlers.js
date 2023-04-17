@@ -11,7 +11,7 @@ export async function getAllUsers(req, res) {
  */
 export async function createOneUser(req, res) {
   console.log(req.body.name)
-  const user = await prisma.user.create({ data: { name: req.body.name } });
+  const user = await prisma.user.create({ data: { name: req.body.name, pwd: req.body.pwd } });
   return res.status(201).json(user);
 }
 

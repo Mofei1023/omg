@@ -22,7 +22,8 @@ function CreateUserPage() {
   
    /** @type {React.ChangeEventHandler<HTMLInputElement>} */
    const handlePicChange = (e) => {
-    console.log('files: ', e.target.files)
+    const image = e.target.files[0]
+    console.log(image.name)
   };
 
   /** @type {React.FormEventHandler<HTMLFormElement>} */

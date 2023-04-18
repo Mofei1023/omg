@@ -14,4 +14,12 @@ model User {
   id      Int      @id @default(autoincrement())
   name    String   @unique
   pwd     String
+  images  Image[]
+}
+
+model Image{
+  id      Int      @id @default(autoincrement())
+  url     String
+  userId  Int
+  user    User     @relation(fields: [userId], references:[id])
 }

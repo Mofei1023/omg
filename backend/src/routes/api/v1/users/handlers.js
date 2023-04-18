@@ -21,6 +21,15 @@ export async function handleLogin(req,res){
   console.log(req.body.name)
   const user = await prisma.user.findUnique({where:{ name: req.body.name}})
   console.log(user)
+  if(!user){
+    console.log('errMsg','UserNotFound');
+  }
+  else if(user.pwd != req.body.pwd){
+    console.log('errMsg','WrongPwd');
+  }
+  else{
+    console.log('Login Success')
+  }
 }
 
 /**

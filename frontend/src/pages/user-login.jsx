@@ -2,6 +2,7 @@ import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import services from "../services";
 
+
 function UserLogin(){
     const [formData, setFormData] = useState({ username: "",password: "" });
     const [message, setMessage] = useState("");
@@ -14,15 +15,21 @@ function UserLogin(){
       [name]: value,
     }));
   };
-
   /** @type {React.FormEventHandler<HTMLFormElement>} */
-  const handleFormSubmit = (event) => {
-    console.log("in handleFormSubmit")
-    services.user.login({ name: formData.username , pwd: formData.password}).then((data) => {
-      setMessage(JSON.stringify(data, null, 2));
-    });
-    setFormData({ username: "" , password: ""});
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log("in handleFormSubmit")
+    const data = await services.auth.login({name:formData.username, pwd:formData.password})
+    console.log("data",data)
+    if(data.error){
+      setMessage(data.error)
+      return;
+    }
+    /*services.auth.login({ name: formData.username , pwd: formData.password}).then((data) => {
+      setMessage(JSON.stringify(data, null, 2));
+    });*/
+    //setFormData({ username: "" , password: ""});
+    
   };
     return (
         <>

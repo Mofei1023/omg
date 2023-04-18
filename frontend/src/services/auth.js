@@ -7,4 +7,13 @@ export const auth = {
     } = await api.get("/csrf-token");
     return { csrfToken };
   },
+  async login({name,pwd}){
+    try{
+      const { data } = await api.post("/users/login", {name,pwd});
+      return data;
+    }
+    catch(e){
+      return e.response.data;
+    }
+  }
 };

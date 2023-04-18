@@ -16,20 +16,52 @@ export async function createOneUser(req, res) {
   return res.status(201).json(user);
 }
 
-export async function handleLogin(req,res){
-  console.log("in handleLogin")
-  console.log(req.body.name)
+/*const UserController ={
+  login:(req,res)=>{
+    res.render('login')
+  },
+  handleLogin: (req, res,next) => {
+    if (req.body.password) === 'abc' {
+      req.session.isLogin = true
+      res.redirect('/')
+    } else {
+      req.flash('errorMessage', 'Please input the correct password.')
+    }
+  },
+
+  // 登出: 清除 session 並導回首頁
+  logout:: (req, res) => {
+    req.session.isLogin = false;
+    res.redirect('/');
+  }
+}*/
+
+export async function handleLogin(req,res,next){
+  //console.log("in handleLogin")
+ // console.log(req.body.name)
   const user = await prisma.user.findUnique({where:{ name: req.body.name}})
   console.log(user)
   if(!user){
-    console.log('errMsg','UserNotFound');
+    return res.status(404).json({error: "Invalid Username of Password"})
   }
   else if(user.pwd != req.body.pwd){
-    console.log('errMsg','WrongPwd');
+    return res.status(404).json({error: "Invalid Username of Password"})
   }
   else{
-    console.log('Login Success')
+    console.log('Login Success');
+    req.session.name = req.body.name;
+    console.log(req.session)
+    res.id = user.id
+    res.redirect('/')
+    //return res.json(user.id)
   }
+  return res.json(user.id)
+}
+
+export async function handleLogout(req,res){
+  console.log("logout")
+  req.session.destroy();
+    return res.redirect('/user-login');
 }
 
 /**

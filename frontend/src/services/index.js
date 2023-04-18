@@ -1,6 +1,6 @@
 import { user } from "./user";
 import { auth } from "./auth";
-import api from "./axiosClient";
+import api from "./axiosClient.js";
 
 const services = {
   auth,

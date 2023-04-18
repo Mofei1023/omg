@@ -20,6 +20,10 @@ function CreateUserPage() {
     //console.log(formData.password)
   };
   
+   /** @type {React.ChangeEventHandler<HTMLInputElement>} */
+   const handlePicChange = (e) => {
+    console.log('files: ', e.target.files)
+  };
 
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleFormSubmit = (event) => {
@@ -80,7 +84,8 @@ function CreateUserPage() {
                 <input 
                   name="pic"
                   type="file" 
-                  accept=".png, .jpg, .jpeg" 
+                  accept=".png, .jpg, .jpeg"
+                  onChange={handlePicChange}
                 />
               </div>
             </div>

@@ -9,7 +9,6 @@ function UserLogin(){
   const handleTextInputChange = ({ target: { name, value } }) => {
     // const { name, value } = event.target
     // obj = { ...prev }; obj[name] = value
-    console.log("hello")
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -18,7 +17,8 @@ function UserLogin(){
 
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleFormSubmit = (event) => {
-    services.user.createOne({ name: formData.username , pwd: formData.password}).then((data) => {
+    console.log("in handleFormSubmit")
+    services.user.login({ name: formData.username , pwd: formData.password}).then((data) => {
       setMessage(JSON.stringify(data, null, 2));
     });
     setFormData({ username: "" , password: ""});

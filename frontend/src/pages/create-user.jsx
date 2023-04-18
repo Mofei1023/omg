@@ -15,11 +15,16 @@ function CreateUserPage() {
       ...prev,
       [name]: value,
     }));
+    //console.log(formData.username)
+    //console.log(formData.password)
   };
+  
 
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleFormSubmit = (event) => {
+    console.log("in handleFormSubmit")
     services.user.createOne({ name: formData.username , pwd: formData.password}).then((data) => {
+      console.log(JSON.stringify(data))
       setMessage(JSON.stringify(data, null, 2));
     });
     setFormData({ username: "" , password: ""});
@@ -71,6 +76,10 @@ function CreateUserPage() {
                   placeholder="Password"
                   value={formData.password}
                   onChange={handleTextInputChange}
+                />
+                <input 
+                  type="file" 
+                  accept=".png, .jpg, .jpeg" 
                 />
               </div>
             </div>

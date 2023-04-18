@@ -3,9 +3,9 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import { prisma } from "./adapters";
-import rootRouter from "./routes";
-import { csrfErrorHandler, doubleCsrfProtection } from "./csrf";
+import { prisma } from "./adapters.js";
+import rootRouter from "./routes/index.js";
+import { csrfErrorHandler, doubleCsrfProtection } from "./csrf.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const frontendDir = path.join(__dirname, "../../frontend/dist");
 

@@ -1,4 +1,4 @@
-import { generateToken } from "../../../csrf";
+import { generateToken } from "../../../csrf.js";
 
 /**
  * @param {import('express').Request} req

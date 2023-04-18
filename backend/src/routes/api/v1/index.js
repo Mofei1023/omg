@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCsrfToken } from "./handlers";
+import { getCsrfToken } from "./handlers.js";
 
 const router = Router();
 router.get(`/csrf-token`, getCsrfToken);

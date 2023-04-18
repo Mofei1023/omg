@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllUsers, getOneUser, createOneUser } from "./handlers";
+import { getAllUsers, getOneUser, createOneUser } from "./handlers.js";
 
 const router = Router();
 router.get(`/`, getAllUsers);

@@ -7,6 +7,8 @@ import "./index.css";
 import UserPage from "./pages/users";
 import CreateUserPage from "./pages/create-user";
 import ErrorPage from "./pages/error-page";
+import UserLogin from "./pages/user-login";
+import Comment from "./pages/comment";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
         path: "/create-user",
         element: <CreateUserPage />,
       },
+      {
+        path: "/user-login",
+        element: <UserLogin/>
+      },
+      {
+        path: "/comment",
+        element: <Comment/>,
+      }
     ],
   },
 ]);

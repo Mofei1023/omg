@@ -1,7 +1,55 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../index.css';
+import profile01 from './images/profile01.jpg';
+import profile02 from './images/profile02.jpg';
+import profile03 from './images/profile03.jpg';
+import profile04 from './images/profile04.jpg';
 
+class ChangeImg extends React.Component {
+  constructor(props) {
+    super(props);
+    this.switchImage = this.switchImage.bind(this);
+    this.state = {
+      currentImage: 0,
+      images: [
+        profile01,
+        profile02,
+        profile03,
+        profile04
+      ]
+    };
+  }
+
+  switchImage() {
+    if (this.state.currentImage < this.state.images.length - 1) {
+      this.setState({
+        currentImage: this.state.currentImage + 1
+      });
+    } else {
+      this.setState({
+        currentImage: 0
+      });
+    }
+    return this.currentImage;
+  }
+
+  componentDidMount() {
+    setInterval(this.switchImage, 2500);
+  }
+
+  render() {
+    return (
+      <div class="col col1">
+        <img
+          class="image round fit"
+          src={this.state.images[this.state.currentImage]}
+          alt=""
+        />
+      </div>
+    );
+  }
+}
 function RenderTable(){
   let context = 
   [
@@ -16,43 +64,21 @@ function RenderTable(){
   }
   return lists  
 };
-function Col2(){
-  return(
-    <div class="col col2">
-      <h3>About Me</h3>
-      <RenderTable />
-    </div>
-  )
-}
-function Section_1() {
+
+function About() {
   return (
-    <section class="wrapper style1">
-      <div class="inner">
+    <div class="inner">
         <div class ="flex flex-2">
-          <Col2 />
+          <ChangeImg />
+          <div class="col col2">
+            <h3>About Me</h3>
+            <RenderTable />
+          </div>
         </div>
-      </div>
-    </section>
+    </div>
   );
+ 
 }
-ReactDOM.render(
-  <Section_1 />,
-  document.getElementById('main')
-);
-ReactDOM.render(
-        <div class="copyright">
-					<ul class="icons">
-						<li><a href="https://www.facebook.com/melissa.t.clark.50/" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-						<li><a href="https://www.instagram.com/melissa_mofei/" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-					</ul>
-					<div>Cellphone: 0917801088 </div>
-					<div>Email: hypermofei0801@gmail.com</div>
-        </div>,
-  document.getElementById('footer')
-);
 
-serviceWorker.unregister();
 
-export default function About() {
-  return <h1>R10921A02 鍾麗文 </h1>;
-}
+export default About

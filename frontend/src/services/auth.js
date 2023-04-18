@@ -10,6 +10,7 @@ export const auth = {
   async login({name,pwd}){
     try{
       const { data } = await api.post("/users/login", {name,pwd});
+      //localStorage.setItem('jwtToken',data.token)
       return data;
     }
     catch(e){

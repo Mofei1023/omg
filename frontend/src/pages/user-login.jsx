@@ -1,13 +1,19 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import services from "../services";
+import ReactDOM from 'react-dom'
+import React from 'react'
+import { redirect } from "react-router-dom";
+import profilepicdefault from './images/alpaca_pic.jpg';
 
 
 function UserLogin(){
     const [formData, setFormData] = useState({ username: "",password: "" });
+    const [userData, setUserData] = useState({ username: "",password: ""});
+    const [isLogIn, setisLogIn] = useState("");
     const [message, setMessage] = useState("");
     /** @type {React.ChangeEventHandler<HTMLInputElement>} */
-  const handleTextInputChange = ({ target: { name, value } }) => {
+    const handleTextInputChange = ({ target: { name, value } }) => {
     // const { name, value } = event.target
     // obj = { ...prev }; obj[name] = value
     setFormData((prev) => ({
@@ -18,20 +24,23 @@ function UserLogin(){
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log("in handleFormSubmit")
     const data = await services.auth.login({name:formData.username, pwd:formData.password})
-    console.log("data",data)
+    //console.log(data)
     if(data.error){
       setMessage(data.error)
       return;
     }
+    setUserData(data)
+    setisLogIn(data.id)
+    console.log(data.id)
     /*services.auth.login({ name: formData.username , pwd: formData.password}).then((data) => {
       setMessage(JSON.stringify(data, null, 2));
     });*/
     //setFormData({ username: "" , password: ""});
     
   };
-    return (
+  if(!isLogIn){
+      return (
         <>
           {/*
             This example requires updating your template:
@@ -101,5 +110,25 @@ function UserLogin(){
         </>
       );
     }
+    else{
+      return(
+      <div class="inner">
+      <div class ="flex flex-2">
+        <div class="col col1">
+          <img
+            class="image round fit"
+            src={profilepicdefault}
+            alt=""
+          />
+        </div>
+        <div class="col col2">
+          <h3>Profile</h3>
+          <h4>Username: {userData.name}</h4>
+        </div>
+      </div>
+  </div>
+      );
+    }
+  }
     
     export default UserLogin;

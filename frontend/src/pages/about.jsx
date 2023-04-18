@@ -4,7 +4,6 @@ import '../index.css';
 import profile01 from './images/profile01.jpg';
 import profile02 from './images/profile02.jpg';
 import profile03 from './images/profile03.jpg';
-import profile04 from './images/profile04.jpg';
 
 class ChangeImg extends React.Component {
   constructor(props) {
@@ -16,7 +15,6 @@ class ChangeImg extends React.Component {
         profile01,
         profile02,
         profile03,
-        profile04
       ]
     };
   }

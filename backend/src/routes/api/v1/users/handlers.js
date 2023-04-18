@@ -10,8 +10,6 @@ export async function getAllUsers(req, res) {
  * @param {import('express').Response} res
  */
 export async function createOneUser(req, res) {
-  console.log("create one user")
-  console.log(req)
   const user = await prisma.user.create({ data: { name: req.body.name, pwd: req.body.pwd } });
   return res.status(201).json(user);
 }

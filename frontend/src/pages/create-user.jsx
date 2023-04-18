@@ -4,9 +4,10 @@ import services from "../services";
 
 // you should design your register page and api
 function CreateUserPage() {
-  const [formData, setFormData] = useState({ username: "",password: "" });
+  const [formData, setFormData] = useState({ username: "",password: ""});
   const [message, setMessage] = useState("");
 
+  
   /** @type {React.ChangeEventHandler<HTMLInputElement>} */
   const handleTextInputChange = ({ target: { name, value } }) => {
     // const { name, value } = event.target
@@ -22,9 +23,8 @@ function CreateUserPage() {
 
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleFormSubmit = (event) => {
-    console.log("in handleFormSubmit")
     services.user.createOne({ name: formData.username , pwd: formData.password}).then((data) => {
-      console.log(JSON.stringify(data))
+      //console.log(JSON.stringify(data))
       setMessage(JSON.stringify(data, null, 2));
     });
     setFormData({ username: "" , password: ""});
@@ -78,6 +78,7 @@ function CreateUserPage() {
                   onChange={handleTextInputChange}
                 />
                 <input 
+                  name="pic"
                   type="file" 
                   accept=".png, .jpg, .jpeg" 
                 />
@@ -101,7 +102,6 @@ function CreateUserPage() {
           </form>
         </div>
       </div>
-      <pre>{message}</pre>
     </>
   );
 }

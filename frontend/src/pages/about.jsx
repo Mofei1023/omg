@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../index.css';
-import profile01 from './images/profile01.jpg';
-import profile02 from './images/profile02.jpg';
-import profile03 from './images/profile03.jpg';
+import profile01 from './images/alpaca_pic.jpg';
 
 class ChangeImg extends React.Component {
   constructor(props) {
@@ -13,8 +11,6 @@ class ChangeImg extends React.Component {
       currentImage: 0,
       images: [
         profile01,
-        profile02,
-        profile03,
       ]
     };
   }

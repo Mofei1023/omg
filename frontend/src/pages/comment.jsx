@@ -16,7 +16,7 @@ function Comment() {
   /** @type {React.FormEventHandler<HTMLFormElement>} */
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
-    console.log(event)
+    //console.log(event)
     
   };
     return (

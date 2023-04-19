@@ -1,12 +1,35 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import services from "../services";
+import React, { useEffect } from 'react';
+
 
 // you should design your register page and api
-function CreateUserPage() {
-  const [image, setImage] = useState("")
+function Login() {
   const [formData, setFormData] = useState({ username: "" , pwd:""});
   const [message, setMessage] = useState("");
+  const [islogin, setlogin] = useState("");
+  const [userdata, setuserdata] = useState({username:"",pwd:"",image:""});
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken'); // Get the token from localStorage
+    const getid = localStorage.getItem('callid');
+    const getname = localStorage.getItem('callname');
+    const getpwd = localStorage.getItem('callpwd');
+    const getimg = localStorage.getItem('callimg');
+
+    //const [userdata, setuserdata] = useState({username:"",pwd:"",image:""});
+    if (token) {
+      setlogin(token); // Set the "islogin" state variable to the token value
+      setuserdata({
+        ...userdata,
+        username: getname,
+        pwd: getpwd ,
+        image: getimg
+      });
+    }
+  }, []); // Run this effect only once when the component mounts
+
 
   /** @type {React.ChangeEventHandler<HTMLInputElement>} */
   const handleTextInputChange = ({ target: { name, value } }) => {
@@ -18,57 +41,50 @@ function CreateUserPage() {
     }));
     //console.log(name,"  " ,value)
   };
-  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
-  const handlePicChange = (e) => {
-    const file = e.target.files[0];
-    const img = new Image();
-    const reader = new FileReader();
-    img.onload = () =>{
-      const resizedimg = resizeImage(img,100,100);
-      //console.log(resizedimg);
-      setImage(resizedimg);
-    }
 
-    reader.onload = (e)=>{
-
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-
-   /* var reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () =>{
-      setImage(JSON.stringify(reader.result))
-    }
-    reader.onerror = error =>{
-      console.log("Error:",error);
-    }*/
-  };
-  const resizeImage = (image, maxw, maxh) =>
-  {
-    const img = image;
-    const canvas = document.createElement("canvas");
-    const ratio = Math.min(maxw/img.width, maxh/img.height);
-    canvas.width = img.width*ratio;
-    canvas.height = img.height*ratio;  
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL(img.type);
-
-  }
   /** @type {React.FormEventHandler<HTMLFormElement>} */
-  const handleFormSubmit = (event) => {
-    services.user.createOne({ name: formData.username , pwd: formData.pwd, img:JSON.stringify(image) }).then((data) => {
-      setMessage(JSON.stringify(data, null, 2));
-    });
-    setFormData({ username: "" });
-    setFormData({ pwd: "" });
-    setFormData({img: ""});
-    //console.log(message)
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
+    const data = await services.auth.login(formData);
+    
+    const token = localStorage.getItem('jwtToken');
+    const getid = localStorage.getItem('callid');
+    const getname = localStorage.getItem('callname');
+    const getpwd = localStorage.getItem('callpwd');
+    const getimg = localStorage.getItem('callimg');
+    //console.log(getimg)
+    //setlogin(data.token);
+    //setMessage(JSON.stringify(data, null, 2));
+    //console.log(data.name)
+    setlogin(!!token);
+    //console.log(getdata.id)
+    setuserdata({
+      ...userdata,
+      username: getname,
+      pwd: getpwd ,
+      image: getimg
+    });
+    
+    //if(data.error)
+    //{
+ //     setlogin(data.error);
+      return ;
+//
+   // }
   };
+  const handleLogout = () => {
+    localStorage.removeItem('jwtToken'); 
+    localStorage.getItem('data'); // Remove the token from localStorage
+    setlogin(""); // Update the "islogin" state variable to an empty string
+    setuserdata({username:"",pwd:"",image:""});
+  }
+ //console.log(islogin);
+ //console.log(userdata.image)
 
-
+  if (!islogin)
+  {
+    
+ // console.log(islogin);
   return (
     <>
       {/*
@@ -79,6 +95,7 @@ function CreateUserPage() {
         <body class="h-full">
         ```
       */}
+
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
@@ -88,7 +105,7 @@ function CreateUserPage() {
               alt="Your Company"
             />
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Create an account
+              Login
             </h2>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
@@ -115,12 +132,6 @@ function CreateUserPage() {
                   value={formData.pwd}
                   onChange={handleTextInputChange}
                 />
-                <input
-                  name="img"
-                  type="file"
-                  accept=".png,.jpg,.jpeg"
-                  onChange={handlePicChange}
-                />
               </div>
             </div>
 
@@ -135,7 +146,7 @@ function CreateUserPage() {
                     aria-hidden="true"
                   />
                 </span>
-                Create
+                Login
               </button>
             </div>
           </form>
@@ -145,5 +156,32 @@ function CreateUserPage() {
     </>
   );
 }
+else{
 
-export default CreateUserPage;
+  return(
+    <>
+      <div>
+
+        <div>
+        <img src={userdata.image} border="0"/>
+        <div class="inner">
+        <div class ="flex flex-2">
+          <div class="col col2">
+            <h3>Username: {userdata.username}</h3>
+          </div>
+        </div>
+         </div>
+          <button onClick={handleLogout}>Logout</button>
+          
+        </div>
+
+    </div>
+      
+    </>
+  );
+  
+}
+
+}
+
+export default Login;

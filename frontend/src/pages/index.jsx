@@ -8,7 +8,7 @@ const navigation = [
   { name: "About", href: "/about" },
   /*{ name: "Users", href: "/users" },*/
   { name: "Register", href: "/create-user" },
-  { name: "Login", href:"/user-login"},
+  { name: "Login", href:"/login"},
   { name: "Comment", href:"/comment"},
 ];
 

@@ -1,12 +1,11 @@
-import { user } from "./user";
-import { auth } from "./auth";
-import api from "./axiosClient.js";
+import { user } from "./user.js";
+import { auth } from "./auth.js";
+import api from "./axiosClient";
 
 const services = {
-  auth,
-  user,
+    auth,
+    user,
 };
-
 api.interceptors.request.use(
   async (config) => {
     const { csrfToken } = await auth.getCsrf();
@@ -19,5 +18,4 @@ api.interceptors.request.use(
       ["post", "put", "patch", "delete"].includes(config.method),
   }
 );
-
 export default services;

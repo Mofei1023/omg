@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { getAllUsers, getOneUser, createOneUser, handleLogin, handleLogout } from "./handlers.js";
-
+import { createOneUser, getAllUsers, getOneUser,getCsrfToken,login} from "./handlers.js";
 const router = Router();
 router.get(`/`, getAllUsers);
-router.post(`/`, createOneUser);
+router.get(`/csrf-token`, getCsrfToken);
+//console.log("req.body.name")
+
+router.post(`/`, createOneUser); 
+router.post(`/login`, login); 
 router.get(`/:id`, getOneUser);
-router.post(`/login`,handleLogin);
-router.get(`/logout`,handleLogout);
-
 export default router;
-

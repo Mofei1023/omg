@@ -7,7 +7,7 @@ import "./index.css";
 import UserPage from "./pages/users";
 import CreateUserPage from "./pages/create-user";
 import ErrorPage from "./pages/error-page";
-import UserLogin from "./pages/user-login";
+import Login from "./pages/login";
 import Comment from "./pages/comment";
 
 const router = createBrowserRouter([
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
         element: <CreateUserPage />,
       },
       {
-        path: "/user-login",
-        element: <UserLogin/>
+        path: "/login",
+        element: <Login/>
       },
       {
         path: "/comment",

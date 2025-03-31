@@ -16,13 +16,32 @@ function generateToken2(userId) {
 * @param {import('express').Response} res
 */
 export async function createOneUser(req, res) {
-    //console.log(req.body)
-    const user = await prisma.user.create({ data: { name: req.body.name,
-                                                    pwd: req.body.pwd,
-                                                    img: req.body.img
-                                                } });
-    return res.status(201).json(user);
-}
+    try {
+      console.log("✅ Received create user body:", req.body);
+  
+      const user = await prisma.user.create({
+        data: {
+          name: req.body.name,
+          pwd: req.body.pwd,
+          img: req.body.img
+        }
+      });
+  
+      console.log("✅ Created user:", user);
+      return res.status(201).json(user);
+  
+    } catch (error) {
+      console.error("❌ Error while creating user:", error);
+      
+      // Prisma 特殊錯誤處理（例如重複名稱）
+      if (error.code === 'P2002') {
+        return res.status(409).json({ error: "Username already exists." });
+      }
+  
+      return res.status(500).json({ error: "Create user failed", detail: error.message });
+    }
+  }
+  
 /**
 * @param {import('express').Request} req
 * @param {import('express').Response} res

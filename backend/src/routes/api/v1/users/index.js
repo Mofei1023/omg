@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createOneUser, getAllUsers, getOneUser,getCsrfToken,login} from "./handlers.js";
 const router = Router();
-//router.get(`/`, getAllUsers);
+router.get(`/`, getAllUsers);
 router.get(`/csrf-token`, getCsrfToken);
 //console.log("req.body.name")
 

@@ -1,84 +1,74 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import services from "../services";
 
-// you should design your register page and api
 function CreateUserPage() {
-  const [image, setImage] = useState("")
-  const [formData, setFormData] = useState({ username: "" , pwd:""});
+  const [image, setImage] = useState("");
+  const [formData, setFormData] = useState({ username: "", pwd: "" });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
   const handleTextInputChange = ({ target: { name, value } }) => {
-    // const { name, value } = event.target
-    // obj = { ...prev }; obj[name] = value
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    //console.log(name,"  " ,value)
   };
-  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
+
   const handlePicChange = (e) => {
     const file = e.target.files[0];
     const img = new Image();
     const reader = new FileReader();
-    img.onload = () =>{
-      const resizedimg = resizeImage(img,100,100);
-      //console.log(resizedimg);
-      setImage(resizedimg);
-    }
 
-    reader.onload = (e)=>{
+    img.onload = () => {
+      const resizedImg = resizeImage(img, 100, 100);
+      setImage(resizedImg);
+    };
 
+    reader.onload = (e) => {
       img.src = e.target.result;
     };
-    reader.readAsDataURL(file);
-
-   /* var reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () =>{
-      setImage(JSON.stringify(reader.result))
+    if (file) {
+      reader.readAsDataURL(file);
     }
-    reader.onerror = error =>{
-      console.log("Error:",error);
-    }*/
   };
-  const resizeImage = (image, maxw, maxh) =>
-  {
-    const img = image;
+
+  const resizeImage = (image, maxw, maxh) => {
     const canvas = document.createElement("canvas");
-    const ratio = Math.min(maxw/img.width, maxh/img.height);
-    canvas.width = img.width*ratio;
-    canvas.height = img.height*ratio;  
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL(img.type);
-
-  }
-  /** @type {React.FormEventHandler<HTMLFormElement>} */
-  const handleFormSubmit = (event) => {
-    services.user.createOne({ name: formData.username , pwd: formData.pwd, img:JSON.stringify(image) }).then((data) => {
-      setMessage(JSON.stringify(data, null, 2));
-    });
-    setFormData({ username: "" });
-    setFormData({ pwd: "" });
-    setFormData({img: ""});
-    //console.log(message)
-    event.preventDefault();
+    const ratio = Math.min(maxw / image.width, maxh / image.height);
+    canvas.width = image.width * ratio;
+    canvas.height = image.height * ratio;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/jpeg");
   };
 
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const data = await services.user.createOne({
+        name: formData.username,
+        pwd: formData.pwd,
+        img: JSON.stringify(image),
+      });
+
+      console.log("✅ Create 成功", data);
+      setMessage("✅ Create 成功！");
+
+      setFormData({ username: "", pwd: "" });
+      setImage("");
+
+      navigate("/users"); // optional: 成功後導向 users 頁面
+    } catch (err) {
+      console.error("❌ Create 失敗", err);
+      setMessage("❌ Create 失敗，請檢查 API 或 Console 錯誤");
+    }
+  };
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
@@ -94,14 +84,11 @@ function CreateUserPage() {
           <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
-                <label htmlFor="username" className="sr-only">
-                  Username
-                </label>
                 <input
                   name="username"
                   type="text"
                   required
-                  className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-3"
                   placeholder="Username"
                   value={formData.username}
                   onChange={handleTextInputChange}
@@ -110,8 +97,8 @@ function CreateUserPage() {
                   name="pwd"
                   type="text"
                   required
-                  className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  placeholder="pwd"
+                  className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-3"
+                  placeholder="Password"
                   value={formData.pwd}
                   onChange={handleTextInputChange}
                 />
@@ -139,9 +126,9 @@ function CreateUserPage() {
               </button>
             </div>
           </form>
+          <pre>{message}</pre>
         </div>
       </div>
-      <pre>{message}</pre>
     </>
   );
 }

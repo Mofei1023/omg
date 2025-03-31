@@ -46,26 +46,26 @@ function CreateUserPage() {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
       const data = await services.user.createOne({
         name: formData.username,
         pwd: formData.pwd,
         img: JSON.stringify(image),
       });
-
+  
       console.log("✅ Create 成功", data);
       setMessage("✅ Create 成功！");
-
       setFormData({ username: "", pwd: "" });
       setImage("");
-
-      navigate("/users"); // optional: 成功後導向 users 頁面
+      navigate("/users");
+  
     } catch (err) {
       console.error("❌ Create 失敗", err);
       setMessage("❌ Create 失敗，請檢查 API 或 Console 錯誤");
     }
   };
+  
 
   return (
     <>

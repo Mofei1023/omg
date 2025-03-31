@@ -44,8 +44,8 @@ app.use(session({
 }));
 
 // ★ CSRF 必須在 session 後面，並保證 cookie 一起帶上
-app.use(doubleCsrfProtection);
-app.use(csrfErrorHandler);
+//app.use(doubleCsrfProtection);
+//app.use(csrfErrorHandler);
 
 app.use(rootRouter);
 

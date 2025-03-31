@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { prisma } from "./adapters.js";
 import rootRouter from "./routes/index.js";
 import { fileURLToPath } from "url";
@@ -12,6 +13,12 @@ const port = process.env.PORT || 8000;
 
 const app = express();
 
+// ✅ 加上 CORS 設定，讓 frontend 能跨網域請求
+app.use(cors({
+  origin: "https://omg-frontend.onrender.com", // 你的 frontend 網域
+  credentials: true
+}));
+
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
@@ -22,7 +29,7 @@ app.use(
       httpOnly: true,
       sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
-      maxAge: null, // session cookie
+      maxAge: null,
     },
     name: "sessionId",
     secret: process.env.SESSION_SECRET || "default-secret",
@@ -37,7 +44,7 @@ app.use(doubleCsrfProtection);
 app.use(csrfErrorHandler);
 app.use(rootRouter);
 
-// 測試用路由（可留可刪）
+// 測試用 route
 app.get("/visit", (req, res) => {
   if (typeof req.session.view === "number") {
     req.session.view++;
@@ -47,7 +54,7 @@ app.get("/visit", (req, res) => {
   res.send(`<h1>Visit: ${req.session.view}</h1>`);
 });
 
-// fallback for unknown routes
+// fallback
 app.use((req, res) => {
   res.status(404).send("Not Found");
 });

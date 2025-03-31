@@ -13,44 +13,44 @@ const port = process.env.PORT || 8000;
 
 const app = express();
 
-// ✅ 加上 CORS 設定，讓 frontend 能跨網域請求
+// ✅ 加上 CORS 設定，允許 frontend 跨網域請求 + 送出 cookie
 app.use(cors({
-  origin: "https://omg-frontend.onrender.com", // 你的 frontend 網域
-  credentials: true
+  origin: "https://omg-frontend.onrender.com",
+  credentials: true,
 }));
 
+// ✅ JSON 與 cookie middleware 要在 session 前面也沒關係，這樣更保險
+app.use(express.json());
+app.use(cookieParser());
+
+// ✅ 記得：production 環境必須設 trust proxy 才能正確處理 cookie
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
 
-app.use(
-  session({
-    cookie: {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: null,
-    },
-    name: "sessionId",
-    secret: process.env.SESSION_SECRET || "default-secret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+app.use(session({
+  name: "sessionId",
+  secret: process.env.SESSION_SECRET || "default-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // only send cookie over https
+    sameSite: "none", // 改成 none 才能跨域 cookie（搭配 credentials: true）
+    maxAge: 1000 * 60 * 60 * 24, // optional: 1 天
+  },
+}));
 
-app.use(express.json());
-app.use(cookieParser());
+// ✅ 放在 session 後面，才能正確讀到 session id
 app.use(doubleCsrfProtection);
 app.use(csrfErrorHandler);
+
+// ✅ 掛入所有 API routes
 app.use(rootRouter);
 
-// 測試用 route
+// 測試用
 app.get("/visit", (req, res) => {
-  if (typeof req.session.view === "number") {
-    req.session.view++;
-  } else {
-    req.session.view = 0;
-  }
+  req.session.view = (req.session.view || 0) + 1;
   res.send(`<h1>Visit: ${req.session.view}</h1>`);
 });
 
@@ -59,7 +59,7 @@ app.use((req, res) => {
   res.status(404).send("Not Found");
 });
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`🚀 API running at http://localhost:${port}`);
 });
 

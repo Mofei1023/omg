@@ -12,12 +12,7 @@ class ChangeImg extends React.Component {
     this.switchImage = this.switchImage.bind(this);
     this.state = {
       currentImage: 0,
-      images: [
-        profile01,
-        profile02,
-        profile03,
-        profile04
-      ]
+      images: [profile01, profile02, profile03, profile04],
     };
   }
 
@@ -54,15 +49,17 @@ class ChangeImg extends React.Component {
 function RenderTable() {
   const context = [
     "國立臺灣大學電機所 R10921A02 鍾麗文",
-    "人生目前是爆炸的情況。",
-    "以前這邊是放一些表演資訊什麼的，現在就是人生爆炸。",
-    "5/13 14可以來台大音樂節看羊駝樂團！",
+    "碩士會唸這麼久其實是因為我都在搞音樂。",
+    "我前陣子發布的歌feat Leo王在右側可以點來看！",
+    "5/9要發新歌，接著要發專輯啦！",
   ];
 
   return (
     <div className="text-white space-y-2">
       {context.map((text) => (
-        <p className="hover:underline" key={text}>．{text}</p>
+        <p className="hover:underline" key={text}>
+          ．{text}
+        </p>
       ))}
     </div>
   );
@@ -74,11 +71,28 @@ function About() {
       className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${ethan})` }}
     >
-      <div className="bg-black bg-opacity-60 rounded-xl p-8 md:p-16 flex flex-col md:flex-row items-center md:space-x-10 max-w-4xl">
-        <ChangeImg />
-        <div className="text-center md:text-left mt-6 md:mt-0">
-          <h3 className="text-white text-3xl font-bold mb-4">About Me</h3>
-          <RenderTable />
+      <div className="bg-black bg-opacity-60 rounded-xl p-8 md:p-16 flex flex-col md:flex-row items-center md:space-x-10 max-w-6xl w-full">
+        {/* 左邊：介紹區塊 */}
+        <div className="flex flex-col items-center md:items-start w-full md:w-1/2">
+          <ChangeImg />
+          <div className="text-center md:text-left mt-6">
+            <h3 className="text-white text-3xl font-bold mb-4">About Me</h3>
+            <RenderTable />
+          </div>
+        </div>
+
+        {/* 右邊：嵌入影片 */}
+        <div className="w-full md:w-1/2 mt-8 md:mt-0 flex justify-center">
+          <div className="aspect-w-16 aspect-h-9 w-full max-w-md">
+            <iframe
+              className="rounded-lg shadow-xl"
+              src="https://www.youtube.com/embed/FDgJ3vjfgwg?si=Ks9sptNHBTNPZqsY"
+              title="耳朵糖果 feat.Leo王 MV"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
         </div>
       </div>
     </div>

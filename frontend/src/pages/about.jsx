@@ -56,9 +56,7 @@ function RenderTable() {
   return (
     <div className="text-white space-y-2">
       {context.map((text) => (
-        <p className="hover:underline" key={text}>
-          ．{text}
-        </p>
+        <p className="hover:underline" key={text}>．{text}</p>
       ))}
     </div>
   );
@@ -67,20 +65,21 @@ function RenderTable() {
 function About() {
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat px-4"
+      className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat px-6"
       style={{ backgroundImage: `url(${ethan})` }}
     >
-      <div className="bg-black bg-opacity-60 rounded-xl p-8 md:p-12 flex flex-col md:flex-row items-center md:items-start justify-between gap-10 w-full max-w-6xl">
-        {/* 左邊：頭像 + 文字 */}
-        <div className="flex flex-col items-center md:items-start w-full md:w-1/2">
+      <div className="flex flex-col md:flex-row items-start justify-between w-full max-w-6xl gap-8">
+        
+        {/* 左側：黑框介紹區塊 */}
+        <div className="bg-black bg-opacity-60 rounded-xl p-8 md:p-12 w-full md:w-1/2 flex flex-col items-center md:items-start">
           <ChangeImg />
           <h3 className="text-white text-3xl font-bold my-4">About Me</h3>
           <RenderTable />
         </div>
 
-        {/* 右邊：YouTube 嵌入 */}
+        {/* 右側：影片區塊（不包在黑框裡） */}
         <div className="w-full md:w-1/2 flex justify-center">
-          <div className="aspect-w-16 aspect-h-9 w-full max-w-md">
+          <div className="w-full max-w-md">
             <iframe
               className="rounded-lg shadow-lg w-full h-64 md:h-72"
               src="https://www.youtube.com/embed/FDgJ3vjfgwg?si=Ks9sptNHBTNPZqsY"
@@ -91,6 +90,7 @@ function About() {
             ></iframe>
           </div>
         </div>
+
       </div>
     </div>
   );

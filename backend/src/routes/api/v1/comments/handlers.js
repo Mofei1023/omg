@@ -12,11 +12,11 @@ export async function getAllComments(req, res) {
 
 // POST 新增留言
 export async function createComment(req, res) {
-  const { text, authorId } = req.body;
-  if (!text || !authorId) return res.status(400).json({ error: "Missing fields" });
+  const { text, userId } = req.body;
+  if (!text || !userId) return res.status(400).json({ error: "Missing fields" });
 
   const newComment = await prisma.comment.create({
-    data: { text, authorId },
+    data: { text, userId },
   });
   res.status(201).json(newComment);
 }

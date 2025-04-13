@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import services from "../services";
 
 function CreateUserPage() {
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(""); // base64 字串
   const [formData, setFormData] = useState({ username: "", pwd: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+  // 處理文字欄位變動
   const handleTextInputChange = ({ target: { name, value } }) => {
     setFormData((prev) => ({
       ...prev,
@@ -16,6 +17,7 @@ function CreateUserPage() {
     }));
   };
 
+  // 處理圖片上傳 + 壓縮
   const handlePicChange = (e) => {
     const file = e.target.files[0];
     const img = new Image();
@@ -23,7 +25,8 @@ function CreateUserPage() {
 
     img.onload = () => {
       const resizedImg = resizeImage(img, 100, 100);
-      setImage(resizedImg);
+      // ⛔ 要 stringify 才能安全存入 DB！
+      setImage(JSON.stringify(resizedImg));
     };
 
     reader.onload = (e) => {
@@ -35,6 +38,7 @@ function CreateUserPage() {
     }
   };
 
+  // 圖片壓縮函數
   const resizeImage = (image, maxw, maxh) => {
     const canvas = document.createElement("canvas");
     const ratio = Math.min(maxw / image.width, maxh / image.height);
@@ -45,6 +49,7 @@ function CreateUserPage() {
     return canvas.toDataURL("image/jpeg");
   };
 
+  // 提交表單
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -52,17 +57,17 @@ function CreateUserPage() {
       const data = await services.user.createOne({
         name: formData.username,
         pwd: formData.pwd,
-        img: image, // ✅ 不要 JSON.stringify()
+        img: image, // ✅ 是 JSON.stringify 過後的 base64 字串
       });
 
       console.log("✅ Create 成功", data);
-      setMessage("✅ Create 成功！");
+      setMessage("✅ 註冊成功！");
       setFormData({ username: "", pwd: "" });
       setImage("");
-      navigate("/users");
+      navigate("/users"); // 導回列表
     } catch (err) {
-      console.error("❌ Create 失敗", err);
-      setMessage("❌ Create 失敗，請檢查 API 或 Console 錯誤");
+      console.error("❌ 註冊失敗", err);
+      setMessage("❌ 註冊失敗，請檢查 console 或 API 狀態");
     }
   };
 
@@ -76,7 +81,7 @@ function CreateUserPage() {
               src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
               alt="Your Company"
             />
-            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
               Create an account
             </h2>
           </div>
@@ -86,19 +91,19 @@ function CreateUserPage() {
                 name="username"
                 type="text"
                 required
-                className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-3"
                 placeholder="Username"
                 value={formData.username}
                 onChange={handleTextInputChange}
+                className="mb-3 relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300"
               />
               <input
                 name="pwd"
                 type="text"
                 required
-                className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-3"
                 placeholder="Password"
                 value={formData.pwd}
                 onChange={handleTextInputChange}
+                className="mb-3 relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300"
               />
               <input
                 name="img"
@@ -110,13 +115,10 @@ function CreateUserPage() {
 
             <button
               type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500"
             >
               <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <LockClosedIcon
-                  className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  aria-hidden="true"
-                />
+                <LockClosedIcon className="h-5 w-5 text-indigo-400" />
               </span>
               Create
             </button>

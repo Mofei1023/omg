@@ -5,8 +5,12 @@ import services from "../services";
 function Login() {
   const [formData, setFormData] = useState({ username: "", pwd: "" });
   const [message, setMessage] = useState("");
-  const [islogin, setlogin] = useState("");
-  const [userdata, setuserdata] = useState({ username: "", pwd: "", image: "" });
+  const [islogin, setLogin] = useState(false);
+  const [userdata, setUserdata] = useState({
+    username: "",
+    pwd: "",
+    image: "",
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
@@ -14,12 +18,19 @@ function Login() {
     const getpwd = localStorage.getItem("callpwd");
     const getimg = localStorage.getItem("callimg");
 
+    let imageParsed = "";
+    try {
+      imageParsed = JSON.parse(getimg);
+    } catch (e) {
+      imageParsed = "";
+    }
+
     if (token) {
-      setlogin(token);
-      setuserdata({
+      setLogin(true);
+      setUserdata({
         username: getname,
         pwd: getpwd,
-        image: getimg,
+        image: imageParsed,
       });
     }
   }, []);
@@ -34,107 +45,104 @@ function Login() {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const data = await services.auth.login(formData);
+
     const token = localStorage.getItem("jwtToken");
     const getname = localStorage.getItem("callname");
     const getpwd = localStorage.getItem("callpwd");
     const getimg = localStorage.getItem("callimg");
 
-    setlogin(!!token);
-    setuserdata({
-      username: getname,
-      pwd: getpwd,
-      image: getimg,
-    });
+    let imageParsed = "";
+    try {
+      imageParsed = JSON.parse(getimg);
+    } catch (e) {
+      imageParsed = "";
+    }
 
-    if (data.error) {
-      setMessage(data.error);
+    if (token) {
+      setLogin(true);
+      setUserdata({
+        username: getname,
+        pwd: getpwd,
+        image: imageParsed,
+      });
+    } else {
+      setMessage("❌ Login failed");
     }
   };
 
   const handleLogout = () => {
     localStorage.clear();
-    setlogin("");
-    setuserdata({ username: "", pwd: "", image: "" });
+    setLogin(false);
+    setUserdata({ username: "", pwd: "", image: "" });
   };
 
   if (!islogin) {
     return (
-      <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8">
-          <div>
-            <img
-              className="mx-auto h-12 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            />
-            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Login
-            </h2>
-          </div>
-          <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
-            <div className="-space-y-px rounded-md shadow-sm">
-              <input
-                name="username"
-                type="text"
-                required
-                className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-3"
-                placeholder="Username"
-                value={formData.username}
-                onChange={handleTextInputChange}
+      <>
+        <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-md space-y-8">
+            <div>
+              <img
+                className="mx-auto h-12 w-auto"
+                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                alt="Your Company"
               />
-              <input
-                name="pwd"
-                type="text"
-                required
-                className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-3"
-                placeholder="Password"
-                value={formData.pwd}
-                onChange={handleTextInputChange}
-              />
+              <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+                Login
+              </h2>
             </div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <LockClosedIcon
-                  className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  aria-hidden="true"
+            <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
+              <div className="-space-y-px rounded-md shadow-sm">
+                <input
+                  name="username"
+                  type="text"
+                  required
+                  placeholder="Username"
+                  value={formData.username}
+                  onChange={handleTextInputChange}
+                  className="mb-3 relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
                 />
-              </span>
-              Login
-            </button>
-          </form>
-          <pre>{message}</pre>
+                <input
+                  name="pwd"
+                  type="text"
+                  required
+                  placeholder="Password"
+                  value={formData.pwd}
+                  onChange={handleTextInputChange}
+                  className="mb-3 relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
+                />
+              </div>
+              <button
+                type="submit"
+                className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500"
+              >
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <LockClosedIcon className="h-5 w-5 text-indigo-400" />
+                </span>
+                Login
+              </button>
+            </form>
+            <pre>{message}</pre>
+          </div>
         </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="text-center mt-10">
-        {userdata.image && (
-          <img
-            src={userdata.image}
-            alt="User Profile"
-            style={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "50%",
-              margin: "0 auto",
-              objectFit: "cover",
-            }}
-          />
-        )}
-        <h3 className="text-2xl font-bold mt-4">Username: {userdata.username}</h3>
-        <button
-          onClick={handleLogout}
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500"
-        >
-          Logout
-        </button>
-      </div>
+      </>
     );
   }
+
+  return (
+    <div className="p-6">
+      {userdata.image && (
+        <img src={userdata.image} alt="user" className="mb-4 w-32 h-32" />
+      )}
+      <h3 className="text-xl font-bold">Username: {userdata.username}</h3>
+      <button
+        onClick={handleLogout}
+        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+      >
+        Logout
+      </button>
+    </div>
+  );
 }
 
 export default Login;

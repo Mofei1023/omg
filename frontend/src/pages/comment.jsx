@@ -25,12 +25,16 @@ function Comment() {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    const res = await services.comment.create({ text: comment, userId });
+    const res = await services.comment.create({
+      content: comment,
+      userId: userId, // 一定要一起送
+    });
     if (res?.id) {
       setComment("");
       fetchComments();
     }
   };
+  
 
   const handleDelete = async (id) => {
     await services.comment.remove(id);

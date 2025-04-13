@@ -1,3 +1,4 @@
+//frontend/src/services/comment.js
 import api from "./axiosClient";
 
 export const comment = {

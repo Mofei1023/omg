@@ -124,27 +124,31 @@ function Login() {
   }
 
   return (
-    <div className="p-6">
-      {userdata.image && (
-        <img
-          src={userdata.image}
-          alt="user"
-          className="mb-4 w-32 h-32 rounded-full mx-auto"
-        />
-      )}
-      <h3 className="text-xl font-bold text-center">
-        Username: {userdata.username}
-      </h3>
-      <div className="text-center">
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${bg})` }}
+    >
+      <div className="w-full max-w-md bg-white bg-opacity-90 rounded-xl shadow-lg p-8 text-center">
+        {userdata.image && (
+          <img
+            src={userdata.image}
+            alt="user"
+            className="mb-4 w-32 h-32 rounded-full mx-auto shadow-md"
+          />
+        )}
+        <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+          Username: {userdata.username}
+        </h3>
         <button
           onClick={handleLogout}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+          className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-500"
         >
           Logout
         </button>
       </div>
     </div>
   );
+  
 }
 
 export default Login;

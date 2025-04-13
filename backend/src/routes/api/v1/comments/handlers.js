@@ -19,6 +19,7 @@ export async function createComment(req, res) {
     data: { text, userId },
   });
   res.status(201).json(newComment);
+  console.log("REQ BODY:", req.body);
 }
 
 // DELETE 刪除留言

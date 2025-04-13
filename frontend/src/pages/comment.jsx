@@ -74,7 +74,7 @@ function Comment() {
             />
             <div className="flex-1">
               <div className="font-bold">{c.user.name}</div>
-              <div>{c.text}</div>
+              <div>{c.content}</div>
             </div>
             {userId === c.userId && (
               <button

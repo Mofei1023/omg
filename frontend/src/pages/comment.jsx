@@ -1,88 +1,81 @@
+// frontend/src/pages/Comment.jsx
 import { LockClosedIcon } from "@heroicons/react/20/solid";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import services from "../services";
 
 function Comment() {
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
+  const [allComments, setAllComments] = useState([]);
   const [userId, setUserId] = useState(null);
 
-  // 讀取登入者資訊
   useEffect(() => {
-    const uid = localStorage.getItem("callid");
-    setUserId(Number(uid));
+    const callid = localStorage.getItem("callid");
+    if (callid) setUserId(parseInt(callid));
     fetchComments();
   }, []);
 
   const fetchComments = async () => {
-    try {
-      const res = await services.comment.getAll();
-      setComments(res);
-    } catch (err) {
-      console.error("Fetch comments failed:", err);
-    }
+    const data = await services.comment.getAll();
+    setAllComments(data);
   };
 
-  const handleCommentSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await services.comment.create({ content: comment });
+  const handleTextInputChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    const res = await services.comment.create({ text: comment });
+    if (res?.id) {
       setComment("");
-      fetchComments(); // 重新載入留言
-    } catch (err) {
-      console.error("Create comment failed:", err);
+      fetchComments();
     }
   };
 
   const handleDelete = async (id) => {
-    try {
-      await services.comment.delete(id);
-      fetchComments(); // 重新載入
-    } catch (err) {
-      console.error("Delete comment failed:", err);
-    }
+    await services.comment.remove(id);
+    fetchComments();
   };
 
   return (
-    <div className="max-w-xl mx-auto py-8">
-      <form onSubmit={handleCommentSubmit} className="space-y-4">
+    <div className="max-w-xl mx-auto p-4">
+      <form onSubmit={handleCommentSubmit} className="mb-6">
         <input
           name="comment"
           type="text"
           value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          required
+          onChange={handleTextInputChange}
           placeholder="Please leave a comment"
-          className="block w-full rounded-md border py-2 px-3 text-gray-900 ring-1 ring-gray-300"
+          className="w-full px-3 py-2 border border-gray-300 rounded mb-2"
+          required
         />
         <button
           type="submit"
-          className="flex w-full justify-center rounded-md bg-indigo-600 py-2 text-white font-semibold hover:bg-indigo-500"
+          className="flex items-center justify-center w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-500"
         >
-          <LockClosedIcon className="h-5 w-5 mr-2 text-indigo-300" />
-          Submit
+          <LockClosedIcon className="w-5 h-5 mr-2" /> Submit
         </button>
       </form>
 
-      <div className="mt-6 space-y-4">
-        {comments.map((c) => (
+      <div className="space-y-4">
+        {allComments.map((c) => (
           <div
             key={c.id}
-            className="flex items-start space-x-3 border-b pb-4"
+            className="flex items-start space-x-3 border-b pb-3 border-gray-200"
           >
             <img
-              src={JSON.parse(c.user.img || '""')}
+              src={JSON.parse(c.user.img || '""') || "https://via.placeholder.com/50"}
               alt="avatar"
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-12 h-12 rounded-full object-cover"
             />
             <div className="flex-1">
-              <div className="font-semibold">{c.user.name}</div>
-              <div className="text-sm text-gray-700">{c.content}</div>
+              <div className="font-bold">{c.user.name}</div>
+              <div>{c.text}</div>
             </div>
-            {c.userId === userId && (
+            {userId === c.userId && (
               <button
+                className="text-red-500 text-sm ml-2"
                 onClick={() => handleDelete(c.id)}
-                className="text-red-500 text-sm hover:underline"
               >
                 Delete
               </button>

@@ -10,10 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  pwd     String
-  img     String
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
+
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  pwd      String
+  img      String
+  comments Comment[] // ← 🔗 關聯所有留言
+}
+
+
 

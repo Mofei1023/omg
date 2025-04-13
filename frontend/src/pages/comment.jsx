@@ -75,6 +75,7 @@ function Comment() {
             <div className="flex-1">
               <div className="font-bold">{c.user.name}</div>
               <div>{c.content}</div>
+              <div className="text-sm text-gray-400">{new Date(c.createdAt).toLocaleString()}</div>
             </div>
             {userId === c.userId && (
               <button

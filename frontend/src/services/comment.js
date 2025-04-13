@@ -10,7 +10,7 @@ export const comment = {
     const res = await api.post("/comments", data);
     return res.data;
   },
-  delete: async (id) => {
+  remove: async (id) => { // ✅ 改這裡
     const res = await api.delete(`/comments/${id}`);
     return res.data;
   },

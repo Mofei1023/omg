@@ -13,15 +13,18 @@ export async function getAllComments(req, res) {
 // POST 新增留言
 export async function createComment(req, res) {
     console.log("REQ BODY:", req.body); // ← debug 看傳進來什麼
+    const { content, userId } = req.body;
   
-    const { text, userId } = req.body;
-    if (!text || !userId) return res.status(400).json({ error: "Missing fields" });
+    if (!content || !userId) return res.status(400).json({ error: "Missing fields" });
   
     const newComment = await prisma.comment.create({
-      data: { text, userId },
+      data: { content, userId },
     });
+  
+    console.log("✅ 成功建立留言:", newComment);
     res.status(201).json(newComment);
   }
+  
 
 // DELETE 刪除留言
 export async function deleteComment(req, res) {

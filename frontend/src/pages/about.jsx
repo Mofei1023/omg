@@ -9,20 +9,26 @@ import '../index.css';
 class ChangeImg extends React.Component {
   constructor(props) {
     super(props);
+    this.switchImage = this.switchImage.bind(this);
     this.state = {
       currentImage: 0,
-      images: [profile01, profile02, profile03, profile04],
+      images: [
+        profile01,
+        profile02,
+        profile03,
+        profile04
+      ]
     };
   }
 
-  switchImage = () => {
-    this.setState((prev) => ({
+  switchImage() {
+    this.setState((prevState) => ({
       currentImage:
-        prev.currentImage < this.state.images.length - 1
-          ? prev.currentImage + 1
+        prevState.currentImage < this.state.images.length - 1
+          ? prevState.currentImage + 1
           : 0,
     }));
-  };
+  }
 
   componentDidMount() {
     this.interval = setInterval(this.switchImage, 2500);
@@ -49,7 +55,7 @@ function RenderTable() {
   const context = [
     "國立臺灣大學電機所 R10921A02 鍾麗文",
     "碩士會拖這麼久其實是因為我都在搞音樂。",
-    "我前陣子發布的歌 feat Leo王 在右側可以點來看！",
+    "我前陣子發布的歌feat Leo王 在右側可以點來看！",
     "5/9要發新歌，接著要發專輯啦！",
   ];
 
@@ -65,32 +71,27 @@ function RenderTable() {
 function About() {
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat px-6"
+      className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat px-4"
       style={{ backgroundImage: `url(${ethan})` }}
     >
-      <div className="flex flex-col md:flex-row items-start justify-between w-full max-w-6xl gap-8">
-        
-        {/* 左側：黑框介紹區塊 */}
-        <div className="bg-black bg-opacity-60 rounded-xl p-8 md:p-12 w-full md:w-1/2 flex flex-col items-center md:items-start">
+      <div className="bg-black bg-opacity-60 rounded-xl p-6 md:p-12 flex flex-col md:flex-row items-center md:items-start md:space-x-10 max-w-6xl w-full">
+        <div className="md:w-1/2 flex flex-col items-center md:items-start">
           <ChangeImg />
-          <h3 className="text-white text-3xl font-bold my-4">About Me</h3>
+          <h3 className="text-white text-3xl font-bold mb-4 mt-6 md:mt-8">About Me</h3>
           <RenderTable />
         </div>
-
-        {/* 右側：影片區塊（不包在黑框裡） */}
-        <div className="w-full md:w-1/2 flex justify-center">
-          <div className="w-full max-w-md">
-            <iframe
-              className="rounded-lg shadow-lg w-full h-64 md:h-72"
-              src="https://www.youtube.com/embed/FDgJ3vjfgwg?si=Ks9sptNHBTNPZqsY"
-              title="禁止戲水 MV"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
+        <div className="md:w-1/2 mt-6 md:mt-0">
+          <iframe
+            width="100%"
+            height="315"
+            src="https://www.youtube.com/embed/FDgJ3vjfgwg"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="rounded-lg shadow-lg"
+          ></iframe>
         </div>
-
       </div>
     </div>
   );

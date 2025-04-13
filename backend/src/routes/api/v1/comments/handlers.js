@@ -12,15 +12,16 @@ export async function getAllComments(req, res) {
 
 // POST 新增留言
 export async function createComment(req, res) {
-  const { text, userId } = req.body;
-  if (!text || !userId) return res.status(400).json({ error: "Missing fields" });
-
-  const newComment = await prisma.comment.create({
-    data: { text, userId },
-  });
-  res.status(201).json(newComment);
-  console.log("REQ BODY:", req.body);
-}
+    console.log("REQ BODY:", req.body); // ← debug 看傳進來什麼
+  
+    const { text, userId } = req.body;
+    if (!text || !userId) return res.status(400).json({ error: "Missing fields" });
+  
+    const newComment = await prisma.comment.create({
+      data: { text, userId },
+    });
+    res.status(201).json(newComment);
+  }
 
 // DELETE 刪除留言
 export async function deleteComment(req, res) {

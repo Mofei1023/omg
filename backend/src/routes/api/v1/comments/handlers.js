@@ -4,7 +4,7 @@ import { prisma } from "../../../../adapters.js";
 // GET 所有留言
 export async function getAllComments(req, res) {
   const comments = await prisma.comment.findMany({
-    include: { author: true },
+    include: { user: true },
     orderBy: { createdAt: "desc" },
   });
   res.json(comments);

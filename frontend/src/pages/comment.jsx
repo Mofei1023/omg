@@ -25,7 +25,7 @@ function Comment() {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    const res = await services.comment.create({ text: comment });
+    const res = await services.comment.create({ text: comment, userId });
     if (res?.id) {
       setComment("");
       fetchComments();

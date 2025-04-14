@@ -1,50 +1,25 @@
-import fetch from 'node-fetch';
+import { InferenceClient } from "@huggingface/inference";
 
-const HF_API_TOKEN = process.env.HF_API_TOKEN;
-const HF_API_URL = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1';
+const client = new InferenceClient(process.env.HF_API_TOKEN);
 
 export async function rewriteText(req, res) {
-  try {
-    const { prompt, emotion, character } = req.body;
-    if (!prompt || !emotion || !character) {
-      return res.status(400).json({ error: 'Missing prompt, emotion, or character' });
-    }
+  const { prompt, emotion, character } = req.body;
 
-    // 包裝 prompt，讓語氣跟角色明確
-    const wrappedPrompt = `Please reply this in a ${emotion} tone of a ${character}: ${prompt}`;
-
-    const response = await fetch(HF_API_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${HF_API_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        inputs: wrappedPrompt,
-        parameters: {
-          temperature: 0.9,
-          top_p: 0.95,
-          do_sample: true,
-          max_new_tokens: 100
-        }
-      })
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      console.error('❌ Hugging Face error:', err);
-      return res.status(500).json({ error: 'AI request failed', detail: err });
-    }
-
-    const data = await response.json();
-    const rewrittenRaw = data[0]?.generated_text || '⚠️ AI response malformed.';
-
-    // 僅保留冒號之後的回應內容
-    const rewritten = rewrittenRaw.split(':').slice(1).join(':').trim();
-
-    return res.json({ result: rewritten });
-  } catch (error) {
-    console.error('❌ Internal error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+  if (!prompt || !emotion || !character) {
+    return res.status(400).json({ error: "Missing prompt, emotion, or character" });
   }
+
+  const fullPrompt = `Please reply in the tone of a ${emotion} ${character}: ${prompt}`;
+
+  const result = await client.chatCompletion({
+    model: "mistralai/Mistral-7B-Instruct-v0.1",
+    provider: "hf-inference",
+    messages: [{ role: "user", content: fullPrompt }],
+    temperature: 0.9,
+    top_p: 0.95,
+    max_tokens: 100,
+  });
+
+  const reply = result.choices?.[0]?.message?.content || "⚠️ No response.";
+  return res.json({ result: reply });
 }

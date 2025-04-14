@@ -1,9 +1,7 @@
-import axiosClient from './axiosClient';
+// frontend/src/services/ai.js
+import api from "./axiosClient";
 
-export function sendRewritePrompt({ prompt, emotion, character }) {
-  return axiosClient.post('/api/v1/ai/rewrite', {
-    prompt,
-    emotion,
-    character
-  });
-}
+export const ai = {
+  rewrite: ({ prompt, emotion, character }) =>
+    api.post("/api/v1/ai/rewrite", { prompt, emotion, character }),
+};

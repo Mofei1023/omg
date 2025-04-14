@@ -11,6 +11,9 @@ import Login from "./pages/login";
 import Comment from "./pages/comment";
 import AIRewrite from "./pages/airewrite";
 
+// ✅ 新增 import：防護元件
+import ProtectedRoute from "./pages/ProtectedRoute";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -18,30 +21,28 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <RootIndex /> },
-      {
-        path: "/about",
-        element: <About />,
-      },
-      {
-        path: "/users",
-        element: <UserPage />,
-      },
-      {
-        path: "/create-user",
-        element: <CreateUserPage />,
-      },
-      {
-        path: "/login",
-        element: <Login/>
-      },
+      { path: "/about", element: <About /> },
+      { path: "/users", element: <UserPage /> },
+      { path: "/create-user", element: <CreateUserPage /> },
+      { path: "/login", element: <Login /> },
+
+      // ✅ 用 ProtectedRoute 包住需要登入的頁面
       {
         path: "/comment",
-        element: <Comment/>,
+        element: (
+          <ProtectedRoute>
+            <Comment />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/airewrite",
-        element: <AIRewrite/>,
-      }
+        element: (
+          <ProtectedRoute>
+            <AIRewrite />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

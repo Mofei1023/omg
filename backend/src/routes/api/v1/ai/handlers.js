@@ -38,7 +38,10 @@ export async function rewriteText(req, res) {
 
     const data = await response.json();
     const rewrittenRaw = data[0]?.generated_text || '⚠️ AI response malformed.';
-    const rewritten = rewrittenRaw.replace(wrappedPrompt, '').trim();
+
+    // 僅保留冒號之後的回應內容
+    const rewritten = rewrittenRaw.split(':').slice(1).join(':').trim();
+
     return res.json({ result: rewritten });
   } catch (error) {
     console.error('❌ Internal error:', error);

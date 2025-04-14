@@ -18,10 +18,7 @@ function CreateUserPage() {
       console.warn("🚨 XSS attempt detected in register form:", value);
       return;
     }
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePicChange = (e) => {
@@ -55,11 +52,15 @@ function CreateUserPage() {
     event.preventDefault();
 
     try {
-      const data = await services.user.createOne({
-        name: formData.username,
-        pwd: formData.pwd,
-        img: image,
-      });
+      const { csrfToken } = await services.auth.getCsrf(); // ✅ CSRF
+      const data = await services.user.createOne(
+        {
+          name: formData.username,
+          pwd: formData.pwd,
+          img: image,
+        },
+        csrfToken // ✅ 傳入 token
+      );
 
       console.log("✅ Create 成功", data);
       setMessage("✅ 註冊成功！");

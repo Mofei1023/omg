@@ -52,30 +52,18 @@ function Login() {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const data = await services.auth.login(formData);
   
-    const token = localStorage.getItem("jwtToken");
-    const getname = localStorage.getItem("callname");
-    const getpwd = localStorage.getItem("callpwd");
-    const getimg = localStorage.getItem("callimg");
+    const user = await services.auth.login(formData); // ✅ 已內建取得 CSRF Token 並帶 headers
   
-    let imageParsed = "";
-    try {
-      imageParsed = JSON.parse(getimg);
-    } catch (e) {
-      imageParsed = "";
-    }
-  
-    if (token) {
+    if (user && user.id) {
       setLogin(true);
       setUserdata({
-        username: getname,
-        pwd: getpwd,
-        image: imageParsed,
+        username: user.name,
+        pwd: user.pwd,
+        image: JSON.parse(user.img || '""'),
       });
   
-      // ✅ 通知其他組件 storage 改變了
-      window.dispatchEvent(new Event("storage"));
+      window.dispatchEvent(new Event("storage")); // ✅ 通知 RootLayout 更新 sidebar
     } else {
       setMessage("❌ Login failed");
     }

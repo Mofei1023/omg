@@ -110,3 +110,12 @@ export async function deleteTestUsers(req, res) {
     res.status(500).json({ error: "刪除失敗", detail: err.message });
   }
 }
+export async function deleteAllUsers(req, res) {
+  try {
+    const result = await prisma.user.deleteMany();
+    res.json({ message: `🧨 刪除成功，共 ${result.count} 筆使用者被刪除。` });
+  } catch (err) {
+    console.error("❌ 刪除失敗:", err);
+    res.status(500).json({ error: "刪除失敗", detail: err.message });
+  }
+}

@@ -3,6 +3,8 @@ import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import alpacaLogo from "./images/alpaca.jpg";
+import menuIcon from "./images/menu.png"; // ✅ 記得放 menu.png 到 images 資料夾
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -24,7 +26,7 @@ export default function RootLayout() {
     ? [
         { name: "About", href: "/about" },
         { name: "Comment", href: "/comment" },
-        { name: "AIRewrite", href: "/airewrite" },
+        { name: "AIChat", href: "/airewrite" },
       ]
     : [
         { name: "About", href: "/about" },
@@ -106,59 +108,76 @@ export default function RootLayout() {
                     </div>
                   )}
   
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={alpacaLogo}
-                          alt=""
-                        />
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {isLoggedIn ? (
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                onClick={handleLogout}
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block w-full text-left px-4 py-2 text-sm text-gray-700"
-                                )}
-                              >
-                                Logout
-                              </button>
-                            )}
-                          </Menu.Item>
-                        ) : (
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="/login"
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
-                                )}
-                              >
-                                Login
-                              </a>
-                            )}
-                          </Menu.Item>
-                        )}
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+  <Menu as="div" className="relative ml-3">
+  <div>
+    <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+      <span className="sr-only">Open user menu</span>
+      <img
+        className="h-8 w-8 rounded-full object-cover"
+        src={menuIcon}
+        alt="Menu"
+      />
+    </Menu.Button>
+  </div>
+  <Transition
+    as={Fragment}
+    enter="transition ease-out duration-100"
+    enterFrom="transform opacity-0 scale-95"
+    enterTo="transform opacity-100 scale-100"
+    leave="transition ease-in duration-75"
+    leaveFrom="transform opacity-100 scale-100"
+    leaveTo="transform opacity-0 scale-95"
+  >
+    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+      {isLoggedIn && (
+        <>
+          <Menu.Item>
+            {({ active }) => (
+              <a
+                href="/profile"
+                className={classNames(
+                  active ? "bg-gray-100" : "",
+                  "block px-4 py-2 text-sm text-gray-700"
+                )}
+              >
+                Profile
+              </a>
+            )}
+          </Menu.Item>
+          <Menu.Item>
+            {({ active }) => (
+              <button
+                onClick={handleLogout}
+                className={classNames(
+                  active ? "bg-gray-100" : "",
+                  "block w-full text-left px-4 py-2 text-sm text-gray-700"
+                )}
+              >
+                Logout
+              </button>
+            )}
+          </Menu.Item>
+        </>
+      )}
+      {!isLoggedIn && (
+        <Menu.Item>
+          {({ active }) => (
+            <a
+              href="/login"
+              className={classNames(
+                active ? "bg-gray-100" : "",
+                "block px-4 py-2 text-sm text-gray-700"
+              )}
+            >
+              Login
+            </a>
+          )}
+        </Menu.Item>
+      )}
+    </Menu.Items>
+  </Transition>
+</Menu>
+
                 </div>
               </div>
             </div>

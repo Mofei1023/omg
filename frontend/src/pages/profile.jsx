@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../index.css';
 import bg from './images/ethan.jpg';
-import defaultAvatar from './images/profile01.jpg';
+import defaultAvatar from './images/alpaca.jpg';
 
 function Profile() {
   const [user, setUser] = useState({ name: '', img: '' });
@@ -48,27 +48,30 @@ function Profile() {
 
           {/* 中間卡片：MV嵌入（與關聯內容） */}
           <div className="col-4 d-flex align-items-stretch">
-            <div className="card">
-              <div className="pic">
-                <iframe
-                  width="100%"
-                  height="200"
-                  src="https://youtu.be/ZHgyQGoeaB0?si=iX6R0gbEN70oSSLe"
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
-              <div className="card-header">OIIAIOOIIIAI</div>
-              <div className="card-body">
-                <h3 className="title"></h3>
-              </div>
-              <div className="card-footer">
-                <p className="text">511215511121</p>
-              </div>
-            </div>
-          </div>
+  <div className="card">
+    <div className="pic">
+      <a
+        href="https://www.youtube.com/watch?v=ZHgyQGoeaB0"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img
+          src="https://img.youtube.com/vi/ZHgyQGoeaB0/maxresdefault.jpg"
+          alt="51121"
+          className="w-full rounded shadow-sm hover:opacity-80 transition"
+        />
+      </a>
+    </div>
+    <div className="card-header">OIIAIOOIIIAI</div>
+    <div className="card-body">
+      <h3 className="title">511215511121</h3>
+    </div>
+    <div className="card-footer">
+      <p className="text">點圖前往觀看完整版貓咪旋轉</p>
+    </div>
+  </div>
+</div>
+
 
           {/* 右邊卡片：敬請期待 */}
           <div className="col-4 d-flex align-items-stretch">

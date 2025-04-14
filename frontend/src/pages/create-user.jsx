@@ -66,7 +66,7 @@ function CreateUserPage() {
       setMessage("✅ 註冊成功！");
       setFormData({ username: "", pwd: "" });
       setImage("");
-      navigate("/about");
+      navigate("/login");
     } catch (err) {
       //console.error("❌ 註冊失敗", err);
       setMessage("❌ 註冊失敗，請檢查 console 或 API 狀態");

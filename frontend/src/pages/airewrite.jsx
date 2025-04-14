@@ -3,7 +3,7 @@ import ethan from "./images/ethan.jpg";
 import "../index.css";
 import services from "../services"; // 確保最上面有引入
 import alpaca from "./images/alpaca.jpg";
-import alpacapic from "./images/alpacapic.jpg";
+import alpacapic from "./images/alpaca_pic.jpg";
 
 const emotions = ["happy", "sad", "angry", "loving"];
 const characters = ["cat", "robot", "pirate", "grandma"];

@@ -12,12 +12,7 @@ class ChangeImg extends React.Component {
     this.switchImage = this.switchImage.bind(this);
     this.state = {
       currentImage: 0,
-      images: [
-        profile01,
-        profile02,
-        profile03,
-        profile04
-      ]
+      images: [profile01, profile02, profile03, profile04]
     };
   }
 
@@ -71,26 +66,49 @@ function RenderTable() {
 function About() {
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat px-4"
+      className="min-h-screen px-4 py-8 bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${ethan})` }}
     >
-      <div className="bg-black bg-opacity-60 rounded-xl p-6 md:p-12 flex flex-col md:flex-row items-center md:items-start md:space-x-10 max-w-6xl w-full">
-        <div className="md:w-1/2 flex flex-col items-center md:items-start">
-          <ChangeImg />
-          <h3 className="text-white text-3xl font-bold mb-4 mt-6 md:mt-8">About Me</h3>
-          <RenderTable />
+      <div className="row">
+        <div className="col-12 col-md-4 d-flex align-items-stretch">
+          <div className="card bg-black bg-opacity-60 text-white p-4 w-100">
+            <div className="pic text-center mb-4">
+              <img
+                src={profile01}
+                alt="Profile"
+                className="rounded-full w-48 h-48 object-cover border-4 border-white shadow-lg mx-auto"
+              />
+            </div>
+            <div className="card-header text-xl font-bold">About Me</div>
+            <div className="card-body">
+              <RenderTable />
+            </div>
+          </div>
         </div>
-        <div className="md:w-1/2 mt-6 md:mt-0">
-          <iframe
-            width="100%"
-            height="315"
-            src="https://www.youtube.com/embed/FDgJ3vjfgwg"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="rounded-lg shadow-lg"
-          ></iframe>
+
+        <div className="col-12 col-md-4 d-flex align-items-stretch justify-content-center mt-4 mt-md-0">
+          <div className="card bg-black bg-opacity-60 p-4 w-100">
+            <div className="card-body">
+              <div className="ratio ratio-16x9">
+                <iframe
+                  src="https://www.youtube.com/embed/FDgJ3vjfgwg"
+                  title="羊駝小姐 feat. Leo王"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-12 col-md-4 d-flex align-items-stretch justify-content-center mt-4 mt-md-0">
+          <div className="card bg-black bg-opacity-60 text-white p-4 w-100">
+            <div className="card-header text-xl font-bold">More</div>
+            <div className="card-body">
+              <p>這裡之後可以放 merch 或最新演出資訊～</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

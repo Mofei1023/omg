@@ -84,6 +84,16 @@ function Login() {
     setUserdata({ username: "", pwd: "", image: "" });
   };
 
+  useEffect(() => {
+    // 控制顯示哪些頁面（限制 register、comment、index）
+    if (islogin) {
+      const restrictedPaths = ["/register", "/comment", "/"];
+      if (restrictedPaths.includes(window.location.pathname)) {
+        window.location.href = "/login";
+      }
+    }
+  }, [islogin]);
+
   if (!islogin) {
     return (
       <div

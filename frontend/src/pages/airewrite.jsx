@@ -19,11 +19,12 @@ function AIRewrite() {
     setResult("");
     setError("");
     try {
-      const res = await fetch("/api/v1/ai/rewrite", {
+      const res = await fetch("https://omg-9scg.onrender.com/api/v1/ai/rewrite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, emotion, character })
-      });
+        credentials: "include",
+        body: JSON.stringify({ prompt, emotion, character }),
+      });      
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Unknown error");
       setResult(data.result);

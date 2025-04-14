@@ -62,9 +62,13 @@ export async function login(req, res) {
     return res.status(404).json({ error: "Invalid username or password" });
   }
 
-  const token = generateToken2(user.id);
+  // ✅ 登入成功：寫入 session
+  req.session.userId = user.id;
+
+  const token = generateToken2(user.id); // 你如果還有用 JWT 就保留這行
   return res.json({ user, token });
 }
+
 
 /**
 * @param {import('express').Request} req

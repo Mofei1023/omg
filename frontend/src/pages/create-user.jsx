@@ -2,15 +2,16 @@ import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import services from "../services";
+import bg from "./images/ethan.jpg";
 
 function CreateUserPage() {
-  const [image, setImage] = useState(""); // base64 字串
+  const [image, setImage] = useState("");
   const [formData, setFormData] = useState({ username: "", pwd: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const suspiciousPattern = /<[^>]*script|onerror\s*=|<img|<iframe|<svg|<object/i;
-  // 處理文字欄位變動
+
   const handleTextInputChange = ({ target: { name, value } }) => {
     if (suspiciousPattern.test(value)) {
       setMessage("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容。系統已紀錄。");
@@ -23,7 +24,6 @@ function CreateUserPage() {
     }));
   };
 
-  // 處理圖片上傳 + 壓縮
   const handlePicChange = (e) => {
     const file = e.target.files[0];
     const img = new Image();
@@ -31,7 +31,6 @@ function CreateUserPage() {
 
     img.onload = () => {
       const resizedImg = resizeImage(img, 100, 100);
-      // ⛔ 要 stringify 才能安全存入 DB！
       setImage(JSON.stringify(resizedImg));
     };
 
@@ -39,12 +38,9 @@ function CreateUserPage() {
       img.src = e.target.result;
     };
 
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+    if (file) reader.readAsDataURL(file);
   };
 
-  // 圖片壓縮函數
   const resizeImage = (image, maxw, maxh) => {
     const canvas = document.createElement("canvas");
     const ratio = Math.min(maxw / image.width, maxh / image.height);
@@ -55,7 +51,6 @@ function CreateUserPage() {
     return canvas.toDataURL("image/jpeg");
   };
 
-  // 提交表單
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -63,14 +58,14 @@ function CreateUserPage() {
       const data = await services.user.createOne({
         name: formData.username,
         pwd: formData.pwd,
-        img: image, // ✅ 是 JSON.stringify 過後的 base64 字串
+        img: image,
       });
 
       console.log("✅ Create 成功", data);
       setMessage("✅ 註冊成功！");
       setFormData({ username: "", pwd: "" });
       setImage("");
-      navigate("/users"); // 導回列表
+      navigate("/users");
     } catch (err) {
       console.error("❌ 註冊失敗", err);
       setMessage("❌ 註冊失敗，請檢查 console 或 API 狀態");
@@ -78,61 +73,52 @@ function CreateUserPage() {
   };
 
   return (
-    <>
-      <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8">
-          <div>
-            <img
-              className="mx-auto h-12 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            />
-            <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-              Create an account
-            </h2>
-          </div>
-          <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
-            <div className="-space-y-px rounded-md shadow-sm">
-              <input
-                name="username"
-                type="text"
-                required
-                placeholder="Username"
-                value={formData.username}
-                onChange={handleTextInputChange}
-                className="mb-3 relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300"
-              />
-              <input
-                name="pwd"
-                type="text"
-                required
-                placeholder="Password"
-                value={formData.pwd}
-                onChange={handleTextInputChange}
-                className="mb-3 relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300"
-              />
-              <input
-                name="img"
-                type="file"
-                accept=".png,.jpg,.jpeg"
-                onChange={handlePicChange}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500"
-            >
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <LockClosedIcon className="h-5 w-5 text-indigo-400" />
-              </span>
-              Create
-            </button>
-          </form>
-          <pre>{message}</pre>
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${bg})` }}
+    >
+      <div className="w-full max-w-md bg-white bg-opacity-90 rounded-xl shadow-lg p-8">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Create Account</h2>
+          <p className="text-sm text-gray-600">請輸入資料以完成註冊</p>
         </div>
+        <form className="mt-6 space-y-4" onSubmit={handleFormSubmit}>
+          <input
+            name="username"
+            type="text"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleTextInputChange}
+            required
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <input
+            name="pwd"
+            type="text"
+            placeholder="Password"
+            value={formData.pwd}
+            onChange={handleTextInputChange}
+            required
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <input
+            name="img"
+            type="file"
+            accept=".png,.jpg,.jpeg"
+            onChange={handlePicChange}
+            className="block w-full text-sm text-gray-500"
+          />
+          <button
+            type="submit"
+            className="flex items-center justify-center w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-500"
+          >
+            <LockClosedIcon className="h-5 w-5 mr-2" />
+            Register
+          </button>
+        </form>
+        <pre className="text-center text-red-500 mt-4">{message}</pre>
       </div>
-    </>
+    </div>
   );
 }
 

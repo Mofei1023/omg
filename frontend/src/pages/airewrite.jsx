@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import ethan from "./images/ethan.jpg";
 import "../index.css";
 import services from "../services"; // 確保最上面有引入
+import alpaca from "./images/alpaca.jpg";
+import alpacapic from "./images/alpacapic.jpg";
 
 const emotions = ["happy", "sad", "angry", "loving"];
 const characters = ["cat", "robot", "pirate", "grandma"];
@@ -48,7 +50,10 @@ function AIRewrite() {
           {/* Emotion card */}
           <div className="col-4 d-flex align-items-stretch">
             <div className="card">
-              <div className="card-header">Emotion</div>
+            <div className="pic">
+                              <img src={alpacapic} alt="profile" />
+                            </div>
+              <div className="card-header">Select an emotion</div>
               <div className="card-body">
                 {emotions.map((e) => (
                   <button
@@ -69,7 +74,10 @@ function AIRewrite() {
           {/* Character card */}
           <div className="col-4 d-flex align-items-stretch">
             <div className="card">
-              <div className="card-header">Character</div>
+              <div className="pic">
+                              <img src={alpaca} alt="profile" />
+                            </div>
+              <div className="card-header">Select a Character</div>
               <div className="card-body">
                 {characters.map((c) => (
                   <button
@@ -90,11 +98,11 @@ function AIRewrite() {
           {/* Prompt and Result card */}
           <div className="col-4 d-flex align-items-stretch">
             <div className="card">
-              <div className="card-header">AI Rewrite</div>
+              <div className="card-header">AI CHAT</div>
               <div className="card-body">
                 <textarea
                   className="form-control mb-2"
-                  placeholder="Enter your prompt..."
+                  placeholder="Chat with the customized AI (in English)："
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                 />

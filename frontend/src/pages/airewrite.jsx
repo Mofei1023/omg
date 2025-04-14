@@ -1,65 +1,114 @@
-// src/pages/AIRewrite.jsx
 import React, { useState } from "react";
+import ethan from "./images/ethan.jpg";
 import "../index.css";
 
+const emotions = ["happy", "sad", "angry", "loving"];
+const characters = ["cat", "robot", "pirate", "grandma"];
+
 function AIRewrite() {
-  const [text, setText] = useState("");
-  const [rewritten, setRewritten] = useState("");
+  const [prompt, setPrompt] = useState("");
+  const [emotion, setEmotion] = useState("happy");
+  const [character, setCharacter] = useState("cat");
+  const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleRewrite = async () => {
+  const handleSubmit = async () => {
     setLoading(true);
-    setRewritten("");
+    setResult("");
     setError("");
     try {
-      const response = await fetch("/api/rewrite", {
+      const res = await fetch("/api/v1/ai/rewrite", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ prompt, emotion, character })
       });
-
-      if (!response.ok) throw new Error("Rewrite failed");
-
-      const data = await response.json();
-      setRewritten(data.rewritten || "（後端尚未提供實際結果）");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Unknown error");
+      setResult(data.result);
     } catch (err) {
-      setError("⚠️ 無法取得改寫結果，請稍後再試。");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">AI Rewrite ✨</h2>
-
-        <textarea
-          className="w-full border border-gray-300 rounded-md p-3 h-40 resize-none mb-4"
-          placeholder="請輸入你想要改寫的文字..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-
-        <div className="flex justify-center">
-          <button
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-6 rounded"
-            onClick={handleRewrite}
-            disabled={loading}
-          >
-            {loading ? "改寫中..." : "改寫"}
-          </button>
-        </div>
-
-        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
-
-        {rewritten && (
-          <div className="mt-6 bg-gray-100 p-4 rounded border border-gray-300">
-            <h3 className="font-semibold mb-2">改寫後的結果：</h3>
-            <p>{rewritten}</p>
+    <div
+      className="min-h-screen px-4 py-8 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${ethan})` }}
+    >
+      <div className="container mx-auto">
+        <div className="row px-4 pt-4">
+          {/* Emotion card */}
+          <div className="col-4 d-flex align-items-stretch">
+            <div className="card">
+              <div className="card-header">Emotion</div>
+              <div className="card-body">
+                {emotions.map((e) => (
+                  <button
+                    key={e}
+                    onClick={() => setEmotion(e)}
+                    className={`btn btn-sm m-1 ${e === emotion ? "btn-primary" : "btn-outline-primary"}`}
+                  >
+                    {e}
+                  </button>
+                ))}
+              </div>
+              <div className="card-footer">
+                <p className="text">Current: {emotion}</p>
+              </div>
+            </div>
           </div>
-        )}
+
+          {/* Character card */}
+          <div className="col-4 d-flex align-items-stretch">
+            <div className="card">
+              <div className="card-header">Character</div>
+              <div className="card-body">
+                {characters.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCharacter(c)}
+                    className={`btn btn-sm m-1 ${c === character ? "btn-success" : "btn-outline-success"}`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+              <div className="card-footer">
+                <p className="text">Current: {character}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Prompt and Result card */}
+          <div className="col-4 d-flex align-items-stretch">
+            <div className="card">
+              <div className="card-header">AI Rewrite</div>
+              <div className="card-body">
+                <textarea
+                  className="form-control mb-2"
+                  placeholder="Enter your prompt..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading || !prompt}
+                  className="btn btn-warning w-100"
+                >
+                  {loading ? "Generating..." : "Generate"}
+                </button>
+                {error && <p className="text-danger mt-2">{error}</p>}
+              </div>
+              <div className="card-footer">
+                <strong>Result:</strong>
+                <p className="text mt-2">{result}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,15 +1,10 @@
-import express from "express";
-import fetch from "node-fetch";
-//import dotenv from "dotenv";
-
-//dotenv.config();
-
-const router = express.Router();
+// backend/src/routes/api/v1/ai/handlers.js
+import fetch from 'node-fetch';
 
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
-const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_URL = 'https://api-inference.huggingface.co/models/google/flan-t5-base';
 
-async function rewriteText(req, res) {
+export async function rewriteText(req, res) {
   const { prompt } = req.body;
 
   if (!prompt) {
@@ -46,7 +41,3 @@ async function rewriteText(req, res) {
     res.status(500).json({ error: "AI request failed" });
   }
 }
-
-router.post("/rewrite", rewriteText);
-
-export default router;

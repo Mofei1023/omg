@@ -1,3 +1,4 @@
+//backend/src/routes/api/v1/users/handlers.js
 import { prisma } from "../../../../adapters.js";
 import { generateToken } from "../../../../csrf.js";
 import jwt from 'jsonwebtoken';
@@ -7,6 +8,7 @@ import bcrypt from 'bcrypt';
   const allUsers = await prisma.user.findMany();
   return res.json(allUsers);
 }*/
+
 
 function generateToken2(userId) {
   const payload = { userId };
@@ -90,4 +92,21 @@ export async function getCsrfToken(req, res) {
   const csrfToken = generateToken(res, req);
   req.session.init = true;
   res.json({ csrfToken });
+}
+
+export async function deleteTestUsers(req, res) {
+  try {
+    const result = await prisma.user.deleteMany({
+      where: {
+        name: {
+          startsWith: "test_", // 你創帳號時如果叫 test_123、test_user 就會被刪
+        },
+      },
+    });
+
+    res.json({ message: `🧹 刪除成功，共 ${result.count} 筆使用者被刪除！` });
+  } catch (err) {
+    console.error("❌ 刪除失敗:", err);
+    res.status(500).json({ error: "刪除失敗", detail: err.message });
+  }
 }

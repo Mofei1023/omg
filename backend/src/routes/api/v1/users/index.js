@@ -5,7 +5,8 @@ import {
   //getAllUsers,
   getOneUser,
   getCsrfToken,
-  login
+  login,
+  deleteTestUsers, // ✅ 加這行
 } from "./handlers.js";
 import { doubleCsrfProtection } from "../../../../csrf.js"; // ✅ 引入 CSRF 中介層
 
@@ -19,5 +20,7 @@ router.post(`/`, doubleCsrfProtection, createOneUser);
 router.post(`/login`, doubleCsrfProtection, login);
 
 router.get(`/:id`, getOneUser);
+
+router.delete("/dev/delete-test-users", deleteTestUsers);
 
 export default router;

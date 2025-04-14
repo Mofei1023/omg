@@ -9,8 +9,14 @@ function CreateUserPage() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+  const suspiciousPattern = /<[^>]*script|onerror\s*=|<img|<iframe|<svg|<object/i;
   // 處理文字欄位變動
   const handleTextInputChange = ({ target: { name, value } }) => {
+    if (suspiciousPattern.test(value)) {
+      setMessage("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容。系統已紀錄。");
+      console.warn("🚨 XSS attempt detected in register form:", value);
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,

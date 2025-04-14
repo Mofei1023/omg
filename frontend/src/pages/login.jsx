@@ -36,7 +36,14 @@ function Login() {
     }
   }, []);
 
+  const suspiciousPattern = /<[^>]*script|onerror\s*=|<img|<iframe|<svg|<object/i;
+
   const handleTextInputChange = ({ target: { name, value } }) => {
+    if (suspiciousPattern.test(value)) {
+      setMessage("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容。系統已紀錄。");
+      console.warn("🚨 XSS attempt detected in login form:", value);
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -148,7 +155,6 @@ function Login() {
       </div>
     </div>
   );
-  
 }
 
 export default Login;

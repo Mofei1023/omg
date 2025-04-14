@@ -13,8 +13,15 @@ function AIRewrite() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const suspiciousPattern = /<[^>]*script|onerror\s*=|<img|<iframe|<svg|<object/i;
+
   const handleSubmit = async () => {
-    console.log("🔵 Triggered handleSubmit", { prompt, emotion, character }); // 加這行！
+    if (suspiciousPattern.test(prompt)) {
+      setError("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容。系統已紀錄。");
+      console.warn("🚨 XSS attempt detected:", prompt);
+      return;
+    }
+    //console.log("🔵 Triggered handleSubmit", { prompt, emotion, character }); // 加這行！
     setLoading(true);
     setResult("");
     setError("");

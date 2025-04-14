@@ -1,39 +1,26 @@
-// 1️⃣ 安裝 openai SDK（終端機）
-// npm install openai  
+import OpenAI from "openai";
 
-// 2️⃣ src/routes/api/v1/ai/handlers.js
-import { Configuration, OpenAIApi } from "openai";
-//import dotenv from "dotenv";
-dotenv.config();
-
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 export async function rewriteText(req, res) {
-  const { input } = req.body;
-  if (!input) return res.status(400).json({ error: "Missing input text" });
+  const { text } = req.body;
+
+  if (!text) return res.status(400).json({ error: "Missing input text" });
 
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
-        {
-          role: "system",
-          content: "You are a helpful assistant who rewrites text in a more polished and concise way.",
-        },
-        {
-          role: "user",
-          content: input,
-        },
+        { role: "system", content: "你是一個幫忙潤飾文字的助手，請將使用者的內容改寫得更通順自然。" },
+        { role: "user", content: text },
       ],
     });
 
-    const rewritten = completion.data.choices[0].message.content.trim();
-    res.json({ rewritten });
+    res.json({ result: completion.choices[0].message.content });
   } catch (err) {
-    console.error("OpenAI error:", err);
-    res.status(500).json({ error: "AI rewrite failed." });
+    console.error("❌ AI error", err);
+    res.status(500).json({ error: "AI request failed" });
   }
 }

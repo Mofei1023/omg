@@ -1,39 +1,52 @@
-// backend/src/routes/api/v1/ai/handlers.js
+import express from "express";
+import fetch from "node-fetch";
+//import dotenv from "dotenv";
 
-import fetch from 'node-fetch';
-//import dotenv from 'dotenv';
 //dotenv.config();
 
+const router = express.Router();
+
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
-const HF_API_URL = 'https://api-inference.huggingface.co/models/eugenesiow/bart-paraphrase';
+const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base";
 
-export async function rewriteText(req, res) {
+async function rewriteText(req, res) {
+  const { prompt } = req.body;
+
+  if (!prompt) {
+    return res.status(400).json({ error: "Missing prompt" });
+  }
+
   try {
-    const inputText = req.body.text;
-    if (!inputText) {
-      return res.status(400).json({ error: 'No input text provided' });
-    }
-
-    const response = await fetch(HF_API_URL, {
-      method: 'POST',
+    const hfResponse = await fetch(HF_API_URL, {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${HF_API_TOKEN}`,
-        'Content-Type': 'application/json'
+        "Authorization": `Bearer ${HF_API_TOKEN}`,
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ inputs: inputText })
+      body: JSON.stringify({
+        inputs: prompt,
+        parameters: {
+          temperature: 0.9,
+          max_new_tokens: 80
+        }
+      })
     });
 
-    if (!response.ok) {
-      const err = await response.json();
-      console.error('❌ Hugging Face error:', err);
-      return res.status(500).json({ error: 'AI request failed', detail: err });
+    const data = await hfResponse.json();
+
+    if (!Array.isArray(data)) {
+      console.error("❌ AI error", data);
+      return res.status(500).json({ error: "AI response format error" });
     }
 
-    const data = await response.json();
-    const rewritten = data[0]?.generated_text || '⚠️ AI response malformed.';
-    return res.json({ rewritten });
-  } catch (error) {
-    console.error('❌ Internal error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    const result = data[0]?.generated_text || "(No result returned)";
+    res.json({ result });
+  } catch (err) {
+    console.error("❌ Internal error:", err);
+    res.status(500).json({ error: "AI request failed" });
   }
 }
+
+router.post("/rewrite", rewriteText);
+
+export default router;

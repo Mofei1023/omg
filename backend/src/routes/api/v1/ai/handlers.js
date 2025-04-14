@@ -22,6 +22,8 @@ export async function rewriteText(req, res) {
         inputs: prompt,
         parameters: {
           temperature: 0.9,
+          top_p: 0.95,
+          do_sample: true,
           max_new_tokens: 80
         }
       })

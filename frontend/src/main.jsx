@@ -10,6 +10,7 @@ import ErrorPage from "./pages/error-page";
 import Login from "./pages/login";
 import Comment from "./pages/comment";
 import AIRewrite from "./pages/airewrite";
+import Profile from "./pages/profile";
 
 // ✅ 新增 import：防護元件
 import ProtectedRoute from "./pages/ProtectedRoute";
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       //{ path: "/users", element: <UserPage /> },
       { path: "/create-user", element: <CreateUserPage /> },
       { path: "/login", element: <Login /> },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
 
       // ✅ 用 ProtectedRoute 包住需要登入的頁面
       {

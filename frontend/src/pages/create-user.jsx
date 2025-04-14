@@ -63,10 +63,10 @@ function CreateUserPage() {
       );
 
       //console.log("✅ Create 成功", data);
-      setMessage("✅ 註冊成功！");
-      setFormData({ username: "", pwd: "" });
-      setImage("");
-      navigate("/login");
+      setMessage("✅ 註冊成功！即將跳轉到登入頁面...");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000); // 2秒後跳轉
     } catch (err) {
       //console.error("❌ 註冊失敗", err);
       setMessage("❌ 註冊失敗，請檢查 console 或 API 狀態");

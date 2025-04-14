@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ethan from "./images/ethan.jpg";
 import "../index.css";
+import services from "../services"; // 確保最上面有引入
 
 const emotions = ["happy", "sad", "angry", "loving"];
 const characters = ["cat", "robot", "pirate", "grandma"];
@@ -18,29 +19,24 @@ function AIRewrite() {
   const handleSubmit = async () => {
     if (suspiciousPattern.test(prompt)) {
       setError("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容。系統已紀錄。");
-      console.warn("🚨 XSS attempt detected:", prompt);
+      console.warn("🚨 XSS attempt detected in prompt:", prompt);
       return;
     }
-    //console.log("🔵 Triggered handleSubmit", { prompt, emotion, character }); // 加這行！
+  
     setLoading(true);
     setResult("");
     setError("");
+  
     try {
-      const res = await fetch("https://omg-9scg.onrender.com/api/v1/ai/rewrite", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ prompt, emotion, character }),
-      });      
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Unknown error");
+      const data = await services.ai.rewrite({ prompt, emotion, character });
       setResult(data.result);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message || "Unknown error");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div

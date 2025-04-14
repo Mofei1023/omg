@@ -5,10 +5,10 @@ import services from "../services"; // 確保最上面有引入
 import alpaca from "./images/alpaca.jpg";
 import alpacapic from "./images/alpaca_pic.jpg";
 // Emotion 對應圖片
-/*import happyImg from "./images/emotion_happy.jpg";
-import sadImg from "./images/emotion_sad.jpg";
+import happyImg from "./images/emotion_happy.png";
+import sadImg from "./images/emotion_sad.jpeg";
 import angryImg from "./images/emotion_angry.jpg";
-import lovingImg from "./images/emotion_loving.jpg";*/
+import lovingImg from "./images/emotion_loving.jpeg";
 
 // Character 對應圖片
 import catImg from "./images/cat.jpeg";
@@ -17,12 +17,12 @@ import pirateImg from "./images/pirate.jpg";
 import grandmaImg from "./images/grandma.png";
 
 // Emotion + Character 對照表
-/*const emotionImages = {
+const emotionImages = {
   happy: happyImg,
   sad: sadImg,
   angry: angryImg,
   loving: lovingImg,
-};*/
+};
 
 const characterImages = {
   cat: catImg,
@@ -74,29 +74,29 @@ function AIRewrite() {
     >
       <div className="container mx-auto">
         <div className="row px-4 pt-4">
-          {/* Emotion card */}
-          <div className="col-4 d-flex align-items-stretch">
-            <div className="card">
-            <div className="pic">
-                              <img src={alpacapic} alt="profile" />
-                            </div>
-              <div className="card-header">Select an emotion</div>
-              <div className="card-body">
-                {emotions.map((e) => (
-                  <button
-                    key={e}
-                    onClick={() => setEmotion(e)}
-                    className={`btn btn-sm m-1 ${e === emotion ? "btn-primary" : "btn-outline-primary"}`}
-                  >
-                    {e}
-                  </button>
-                ))}
-              </div>
-              <div className="card-footer">
-                <p className="text">Current: {emotion}</p>
-              </div>
-            </div>
-          </div>
+        <div className="col-4 d-flex align-items-stretch">
+  <div className="card">
+    <div className="pic">
+      <img src={emotionImages[emotion]} alt={emotion} />
+    </div>
+    <div className="card-header">Select an emotion</div>
+    <div className="card-body">
+      {emotions.map((e) => (
+        <button
+          key={e}
+          onClick={() => setEmotion(e)}
+          className={`btn btn-sm m-1 ${e === emotion ? "btn-primary" : "btn-outline-primary"}`}
+        >
+          {e}
+        </button>
+      ))}
+    </div>
+    <div className="card-footer">
+      <p className="text">Current: {emotion}</p>
+    </div>
+  </div>
+</div>
+
 
           <div className="col-4 d-flex align-items-stretch">
   <div className="card">

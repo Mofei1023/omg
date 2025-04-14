@@ -53,19 +53,19 @@ function Login() {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const data = await services.auth.login(formData);
-
+  
     const token = localStorage.getItem("jwtToken");
     const getname = localStorage.getItem("callname");
     const getpwd = localStorage.getItem("callpwd");
     const getimg = localStorage.getItem("callimg");
-
+  
     let imageParsed = "";
     try {
       imageParsed = JSON.parse(getimg);
     } catch (e) {
       imageParsed = "";
     }
-
+  
     if (token) {
       setLogin(true);
       setUserdata({
@@ -73,10 +73,14 @@ function Login() {
         pwd: getpwd,
         image: imageParsed,
       });
+  
+      // ✅ 通知其他組件 storage 改變了
+      window.dispatchEvent(new Event("storage"));
     } else {
       setMessage("❌ Login failed");
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.clear();

@@ -2,7 +2,7 @@
 import { Router } from "express";
 import {
   createOneUser,
-  getAllUsers,
+  //getAllUsers,
   getOneUser,
   getCsrfToken,
   login

@@ -3,10 +3,10 @@ import { generateToken } from "../../../../csrf.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-export async function getAllUsers(req, res) {
+/*export async function getAllUsers(req, res) {
   const allUsers = await prisma.user.findMany();
   return res.json(allUsers);
-}
+}*/
 
 function generateToken2(userId) {
   const payload = { userId };

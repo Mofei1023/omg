@@ -1,26 +1,17 @@
-// csrf.js
+// src/csrf.js
 import { doubleCsrf } from "csrf-csrf";
 
-const {
+export const {
   generateToken,
   doubleCsrfProtection,
   invalidCsrfTokenError,
   csrfTokenByCookie,
-  csrfErrorHandler,
 } = doubleCsrf({
-  getSecret: (req) => req.session.id,
-  cookieName: "csrf-token",
+  getSecret: (req) => req.session.csrfSecret,
+  cookieName: "XSRF-TOKEN",
   cookieOptions: {
     sameSite: "none",
     secure: true,
   },
-  size: 64,
+  getTokenFromRequest: (req) => req.headers["x-csrf-token"],
 });
-
-export {
-  generateToken,
-  doubleCsrfProtection,
-  invalidCsrfTokenError,
-  csrfTokenByCookie,
-  csrfErrorHandler,
-};

@@ -31,20 +31,31 @@ function Comment() {
       alert("⚠️ 留言內容包含可疑指令，請勿輸入程式碼或特殊 SQL 語法！");
       return;
     }
-    const res = await services.comment.create({
-      content: comment,
-      userId: userId, // 一定要一起送
-    });
-    if (res?.id) {
-      setComment("");
-      fetchComments();
+
+    try {
+      const res = await services.comment.create({
+        content: comment,
+        userId: userId,
+      });
+
+      if (res?.id) {
+        setComment("");
+        fetchComments();
+      }
+    } catch (err) {
+      console.error("❌ 留言失敗：", err);
+      alert("留言失敗，請稍後再試");
     }
   };
-  
 
   const handleDelete = async (id) => {
-    await services.comment.remove(id);
-    fetchComments();
+    try {
+      await services.comment.remove(id);
+      fetchComments();
+    } catch (err) {
+      console.error("❌ 刪除留言失敗", err);
+      alert("刪除留言失敗，請稍後再試");
+    }
   };
 
   return (

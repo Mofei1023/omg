@@ -37,7 +37,8 @@ export async function rewriteText(req, res) {
     }
 
     const data = await response.json();
-    const rewritten = data[0]?.generated_text || '⚠️ AI response malformed.';
+    const rewrittenRaw = data[0]?.generated_text || '⚠️ AI response malformed.';
+    const rewritten = rewrittenRaw.replace(wrappedPrompt, '').trim();
     return res.json({ result: rewritten });
   } catch (error) {
     console.error('❌ Internal error:', error);

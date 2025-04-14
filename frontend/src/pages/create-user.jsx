@@ -15,7 +15,7 @@ function CreateUserPage() {
   const handleTextInputChange = ({ target: { name, value } }) => {
     if (suspiciousPattern.test(value)) {
       setMessage("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容。系統已紀錄。");
-      console.warn("🚨 XSS attempt detected in register form:", value);
+      //console.warn("🚨 XSS attempt detected in register form:", value);
       return;
     }
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -62,13 +62,13 @@ function CreateUserPage() {
         csrfToken // ✅ 傳入 token
       );
 
-      console.log("✅ Create 成功", data);
+      //console.log("✅ Create 成功", data);
       setMessage("✅ 註冊成功！");
       setFormData({ username: "", pwd: "" });
       setImage("");
-      navigate("/users");
+      navigate("/about");
     } catch (err) {
-      console.error("❌ 註冊失敗", err);
+      //console.error("❌ 註冊失敗", err);
       setMessage("❌ 註冊失敗，請檢查 console 或 API 狀態");
     }
   };

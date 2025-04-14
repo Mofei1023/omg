@@ -1,4 +1,4 @@
-//import { user } from "./user.js";
+import { user } from "./user.js";
 import { auth } from "./auth.js";
 import { comment } from "./comment.js"; // ✅ 加這行
 import { ai } from "./ai.js"; // ✅ 新增這行
@@ -6,7 +6,7 @@ import api from "./axiosClient";
 
 const services = {
   auth,
-  //user,
+  user,
   comment, // ✅ 加這行
   ai,
 };

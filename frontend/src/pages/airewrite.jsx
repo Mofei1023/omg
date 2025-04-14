@@ -5,10 +5,10 @@ import services from "../services"; // 確保最上面有引入
 import alpaca from "./images/alpaca.jpg";
 import alpacapic from "./images/alpaca_pic.jpg";
 // Emotion 對應圖片
-import happyImg from "./images/emotion_happy.png";
-import sadImg from "./images/emotion_sad.jpeg";
-import angryImg from "./images/emotion_angry.jpg";
-import lovingImg from "./images/emotion_loving.jpeg";
+import happyImg from "./images/happy.png";
+import sadImg from "./images/sad.jpeg";
+import angryImg from "./images/angry.jpg";
+import lovingImg from "./images/loving.jpeg";
 
 // Character 對應圖片
 import catImg from "./images/cat.jpeg";

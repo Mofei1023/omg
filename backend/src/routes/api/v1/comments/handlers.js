@@ -28,9 +28,21 @@ export async function createComment(req, res) {
 
 // DELETE 刪除留言
 export async function deleteComment(req, res) {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ error: "Invalid id" });
+  const commentId = parseInt(req.params.id);
+  const currentUserId = req.session.userId; // ✅ 這一步：從 session 拿登入者的 id
 
-  await prisma.comment.delete({ where: { id } });
+  const comment = await prisma.comment.findUnique({
+    where: { id: commentId },
+  });
+
+  if (!comment) return res.status(404).json({ error: "Comment not found" });
+
+  // ✅ 這一步：只有留言的作者才能刪除
+  if (comment.userId !== currentUserId) {
+    return res.status(403).json({ error: "You cannot delete this comment" });
+  }
+
+  await prisma.comment.delete({ where: { id: commentId } });
   res.json({ message: "Deleted" });
 }
+

@@ -1,48 +1,46 @@
-// backend/src/routes/api/v1/ai/handlers.js
 import fetch from 'node-fetch';
 
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
-const HF_API_URL = 'https://api-inference.huggingface.co/models/google/flan-t5-base';
+const HF_API_URL = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1';
 
 export async function rewriteText(req, res) {
-  const { prompt } = req.body;
-
-  if (!prompt) {
-    return res.status(400).json({ error: "Missing prompt" });
-  }
-
   try {
-    const hfResponse = await fetch(HF_API_URL, {
-      method: "POST",
+    const { prompt, emotion, character } = req.body;
+    if (!prompt || !emotion || !character) {
+      return res.status(400).json({ error: 'Missing prompt, emotion, or character' });
+    }
+
+    // 包裝 prompt，讓語氣跟角色明確
+    const wrappedPrompt = `Please reply this in a ${emotion} tone of a ${character}: ${prompt}`;
+
+    const response = await fetch(HF_API_URL, {
+      method: 'POST',
       headers: {
-        "Authorization": `Bearer ${HF_API_TOKEN}`,
-        "Content-Type": "application/json"
+        'Authorization': `Bearer ${HF_API_TOKEN}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        inputs: prompt,
+        inputs: wrappedPrompt,
         parameters: {
-            temperature: 0.9,
-            top_p: 0.95,
-            do_sample: true,
-            top_k: 40,
-            repetition_penalty: 1.2,
-            max_new_tokens: 80
-          }
-          
+          temperature: 0.9,
+          top_p: 0.95,
+          do_sample: true,
+          max_new_tokens: 100
+        }
       })
     });
 
-    const data = await hfResponse.json();
-
-    if (!Array.isArray(data)) {
-      console.error("❌ AI error", data);
-      return res.status(500).json({ error: "AI response format error" });
+    if (!response.ok) {
+      const err = await response.json();
+      console.error('❌ Hugging Face error:', err);
+      return res.status(500).json({ error: 'AI request failed', detail: err });
     }
 
-    const result = data[0]?.generated_text || "(No result returned)";
-    res.json({ result });
-  } catch (err) {
-    console.error("❌ Internal error:", err);
-    res.status(500).json({ error: "AI request failed" });
+    const data = await response.json();
+    const rewritten = data[0]?.generated_text || '⚠️ AI response malformed.';
+    return res.json({ result: rewritten });
+  } catch (error) {
+    console.error('❌ Internal error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }

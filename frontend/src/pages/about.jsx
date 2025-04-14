@@ -24,7 +24,7 @@ function About() {
               </div>
               <div className="card-body">
                 <h3 className="title">
-                  Special title treatment
+                  你好我是羊駝🦙
                 </h3>
               </div>
               <div className="card-footer">

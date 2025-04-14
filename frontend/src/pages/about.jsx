@@ -1,6 +1,8 @@
 import React from 'react';
 import profile01 from './images/profile01.jpg';
+import ALPACA from './images/ALPACA.jpeg'
 import ethan from './images/ethan.jpg';
+import TWFest from './images/TWFest.jpeg'
 import '../index.css';
 
 function About() {
@@ -15,7 +17,7 @@ function About() {
           <div className="col-4 d-flex align-items-stretch">
             <div className="card">
               <div className="pic">
-                <img src={profile01} alt="profile" />
+                <img src={ALPACA} alt="profile" />
               </div>
               <div className="card-header">
                 About Me
@@ -28,6 +30,8 @@ function About() {
               <div className="card-footer">
                 <p className="text">
                   國立臺灣大學電機所 R10921A02 鍾麗文
+                  以羊駝小姐的身份在活動當中
+                  5月開始要來發專輯了！
                 </p>
               </div>
             </div>
@@ -52,12 +56,12 @@ function About() {
               </div>
               <div className="card-body">
                 <h3 className="title">
-                  羊駝小姐 feat. Leo王
+                  耳朵糖果 - 羊駝小姐 feat. Leo王
                 </h3>
               </div>
               <div className="card-footer">
                 <p className="text">
-                  歡迎點擊右側觀看我最近發行的單曲 MV！
+                  歡迎觀看我最近發行的單曲 MV！
                 </p>
               </div>
             </div>
@@ -67,7 +71,7 @@ function About() {
           <div className="col-4 d-flex align-items-stretch">
             <div className="card">
               <div className="pic">
-                <img src="https://picsum.photos/300/?random=11" alt="default" />
+                <img src={TWFest} alt="default" />
               </div>
               <div className="card-header">
                 Coming Soon

@@ -1,4 +1,4 @@
-import { NavLink, Outlet, Navigate } from "react-router-dom";
+import { NavLink, Outlet, Navigate, useLocation } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -9,27 +9,32 @@ function classNames(...classes) {
 }
 
 export default function RootLayout() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("jwtToken"));
+  const location = useLocation();
 
   useEffect(() => {
-    const token = localStorage.getItem("jwtToken");
-    setIsLoggedIn(!!token);
-  }, []);
+    const handleStorage = () => {
+      setIsLoggedIn(!!localStorage.getItem("jwtToken"));
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [location]);
 
-  const filteredNavigation = [
-    { name: "About", href: "/about" },
-    { name: "AIRewrite", href: "/airewrite" },
-    ...(!isLoggedIn
-      ? [
-          { name: "Register", href: "/create-user" },
-          { name: "Login", href: "/login" },
-          { name: "Comment", href: "/comment" },
-        ]
-      : [])
-  ];
+  const navigation = isLoggedIn
+    ? [
+        { name: "About", href: "/about" },
+        { name: "Comment", href: "/comment" },
+        { name: "AIRewrite", href: "/airewrite" },
+      ]
+    : [
+        { name: "About", href: "/about" },
+        { name: "Register", href: "/create-user" },
+        { name: "Login", href: "/login" },
+      ];
 
   const handleLogout = () => {
     localStorage.clear();
+    setIsLoggedIn(false);
     window.location.href = "/login";
   };
 
@@ -68,7 +73,7 @@ export default function RootLayout() {
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
-                      {filteredNavigation.map((item) => (
+                      {navigation.map((item) => (
                         <NavLink
                           key={item.name}
                           to={item.href}
@@ -156,7 +161,7 @@ export default function RootLayout() {
             <Disclosure.Panel className="sm:hidden">
               {({ close }) => (
                 <div className="space-y-1 px-2 pt-2 pb-3">
-                  {filteredNavigation.map((item) => (
+                  {navigation.map((item) => (
                     <NavLink
                       key={item.name}
                       to={item.href}

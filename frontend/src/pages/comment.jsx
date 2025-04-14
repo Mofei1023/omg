@@ -18,18 +18,19 @@ function Comment() {
     const data = await services.comment.getAll();
     setAllComments(data);
   };
-  const suspiciousPattern = /<[^>]*script|onerror\s*=|<img|<iframe|<svg|<object/i;
+
   const handleTextInputChange = (e) => {
-    if (suspiciousPattern.test(value)) {
-      alert("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容！");
-      console.warn("🚨 XSS attempt detected in comment:", value);
-      return;
-    }
     setComment(e.target.value);
   };
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+    const dangerousPattern = /<[^>]+>|script|onerror\s*=|onload\s*=|--|;|union\s+select|drop\s+table|insert\s+into/i;
+
+    if (dangerousPattern.test(comment)) {
+      alert("⚠️ 留言內容包含可疑指令，請勿輸入程式碼或特殊 SQL 語法！");
+      return;
+    }
     const res = await services.comment.create({
       content: comment,
       userId: userId, // 一定要一起送

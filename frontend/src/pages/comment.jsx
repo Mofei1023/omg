@@ -18,8 +18,13 @@ function Comment() {
     const data = await services.comment.getAll();
     setAllComments(data);
   };
-
+  const suspiciousPattern = /<[^>]*script|onerror\s*=|<img|<iframe|<svg|<object/i;
   const handleTextInputChange = (e) => {
+    if (suspiciousPattern.test(value)) {
+      alert("⚠️ 請勿輸入可疑的 HTML 或 JavaScript 內容！");
+      console.warn("🚨 XSS attempt detected in comment:", value);
+      return;
+    }
     setComment(e.target.value);
   };
 

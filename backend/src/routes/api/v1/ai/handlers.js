@@ -21,11 +21,14 @@ export async function rewriteText(req, res) {
       body: JSON.stringify({
         inputs: prompt,
         parameters: {
-          temperature: 0.9,
-          top_p: 0.95,
-          do_sample: true,
-          max_new_tokens: 80
-        }
+            temperature: 0.9,
+            top_p: 0.95,
+            do_sample: true,
+            top_k: 40,
+            repetition_penalty: 1.2,
+            max_new_tokens: 80
+          }
+          
       })
     });
 

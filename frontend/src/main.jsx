@@ -9,6 +9,7 @@ import CreateUserPage from "./pages/create-user";
 import ErrorPage from "./pages/error-page";
 import Login from "./pages/login";
 import Comment from "./pages/comment";
+import AIRewrite from "./pages/airewrite";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/comment",
         element: <Comment/>,
+      },
+      {
+        path: "/airewrite",
+        element: <AIRewrite/>,
       }
     ],
   },

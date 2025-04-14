@@ -26,35 +26,38 @@ function Comment() {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     const dangerousPattern = /<[^>]+>|script|onerror\s*=|onload\s*=|--|;|union\s+select|drop\s+table|insert\s+into/i;
-
+  
     if (dangerousPattern.test(comment)) {
       alert("⚠️ 留言內容包含可疑指令，請勿輸入程式碼或特殊 SQL 語法！");
       return;
     }
-
+  
     try {
+      const { csrfToken } = await services.auth.getCsrf(); // 加這行
       const res = await services.comment.create({
         content: comment,
-        userId: userId,
-      });
-
+        userId,
+      }, csrfToken); // 傳入 token
+  
       if (res?.id) {
         setComment("");
         fetchComments();
       }
     } catch (err) {
-      console.error("❌ 留言失敗：", err);
-      alert("留言失敗，請稍後再試");
+      alert("❌ 留言失敗，請稍後再試");
+      console.error(err);
     }
   };
+  
 
   const handleDelete = async (id) => {
     try {
-      await services.comment.remove(id);
+      const { csrfToken } = await services.auth.getCsrf(); // 加這行
+      await services.comment.remove(id, csrfToken); // 傳入 token
       fetchComments();
     } catch (err) {
-      console.error("❌ 刪除留言失敗", err);
-      alert("刪除留言失敗，請稍後再試");
+      alert("❌ 刪除失敗，請稍後再試");
+      console.error(err);
     }
   };
 

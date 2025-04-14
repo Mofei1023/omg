@@ -1,3 +1,4 @@
+//backend/src/index.js
 import express from "express";
 import cors from "cors";
 import { prisma } from "./adapters.js";
@@ -7,11 +8,15 @@ import { dirname } from "path";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import { csrfErrorHandler, doubleCsrfProtection } from "./csrf.js";
+import helmet from "helmet";
+
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 8000;
 
 const app = express();
+
+app.use(helmet());
 
 // ✅ 1. CORS：一定要 origin 指定前端網址，credentials: true 才能帶 cookie
 app.use(cors({

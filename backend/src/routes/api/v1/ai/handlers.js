@@ -3,7 +3,7 @@
 
 // 2️⃣ src/routes/api/v1/ai/handlers.js
 import { Configuration, OpenAIApi } from "openai";
-import dotenv from "dotenv";
+//import dotenv from "dotenv";
 dotenv.config();
 
 const configuration = new Configuration({

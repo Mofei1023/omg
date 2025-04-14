@@ -14,6 +14,7 @@ function AIRewrite() {
   const [error, setError] = useState("");
 
   const handleSubmit = async () => {
+    console.log("🔵 Triggered handleSubmit", { prompt, emotion, character }); // 加這行！
     setLoading(true);
     setResult("");
     setError("");

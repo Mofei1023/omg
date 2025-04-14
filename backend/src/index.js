@@ -1,4 +1,4 @@
-//backend/src/index.js
+// backend/src/index.js
 import express from "express";
 import cors from "cors";
 import { prisma } from "./adapters.js";
@@ -9,33 +9,36 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import { csrfErrorHandler, doubleCsrfProtection } from "./csrf.js";
 import helmet from "helmet";
-
+import xss from "xss-clean";
+import rateLimit from "express-rate-limit";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 8000;
 
 const app = express();
 
+// ✅ 1. 安全基本設置
 app.use(helmet());
 
-// ✅ 1. CORS：一定要 origin 指定前端網址，credentials: true 才能帶 cookie
+// ✅ 2. CORS 設定（確保前端來源安全）
 app.use(cors({
   origin: "https://omg-frontend.onrender.com",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "x-csrf-token"], // ✅ 必須允許 CSRF token header
+  allowedHeaders: ["Content-Type", "x-csrf-token"],
 }));
 
+// ✅ 3. 基本中介層
 app.use(express.json());
 app.use(cookieParser());
+app.use(xss());
 
-// ✅ 2. 如果部署在 https，要加 trust proxy
+// ✅ 4. 部署 HTTPS 必備設定
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
 
-// ✅ 3. 設定 session（secure 必須配合 https）
-// name 是 cookie 名稱，可以自訂
+// ✅ 5. session 設定
 app.use(session({
   name: "sessionId",
   secret: process.env.SESSION_SECRET || "default-secret",
@@ -43,30 +46,48 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    sameSite: "none",                     // ⛔️ 若不同源一定要用 none
-    secure: process.env.NODE_ENV === "production", // ⚠️ 一定要 https 才設 true
-    maxAge: 1000 * 60 * 60 * 24,          // 1天
+    sameSite: "none",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 1000 * 60 * 60 * 24,
   },
 }));
 
-// ✅ 4. CSRF middleware 一定要放在 session 後
+// ✅ 6. CSRF 保護
 app.use(doubleCsrfProtection);
 app.use(csrfErrorHandler);
 
-// ✅ 5. 你的主要路由（一定要在 CSRF middleware 後）
-app.use(rootRouter);
-
-// 範例 GET：計數器
-app.get("/visit", (req, res) => {
-  req.session.view = (req.session.view || 0) + 1;
-  res.send(`<h1>Visit: ${req.session.view}</h1>`);
+// ✅ 7. Referer 防偽（簡單對抗 curl/Burp 爆破）
+app.use((req, res, next) => {
+  const referer = req.get("Referer");
+  if (referer && !referer.startsWith("https://omg-frontend.onrender.com")) {
+    return res.status(403).json({ error: "Forbidden: Invalid Referer" });
+  }
+  next();
 });
 
-// 404 fallback
+// ✅ 8. Rate Limiting（打爆 API 的防線）
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 30,
+  message: { error: "🚫 Too many requests, please slow down!" },
+});
+app.use("/api", limiter); // API 前綴保護
+
+// ✅ 9. 主路由
+app.use(rootRouter);
+
+// ✅ 10. 錯誤攔截（防止錯誤洩露）
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
+// ✅ 11. 404 fallback
 app.use((req, res) => {
   res.status(404).send("Not Found");
 });
 
+// ✅ 12. 啟動
 app.listen(port, "0.0.0.0", () => {
   console.log(`🚀 API running at http://0.0.0.0:${port}`);
 });

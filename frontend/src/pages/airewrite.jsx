@@ -4,6 +4,33 @@ import "../index.css";
 import services from "../services"; // 確保最上面有引入
 import alpaca from "./images/alpaca.jpg";
 import alpacapic from "./images/alpaca_pic.jpg";
+// Emotion 對應圖片
+/*import happyImg from "./images/emotion_happy.jpg";
+import sadImg from "./images/emotion_sad.jpg";
+import angryImg from "./images/emotion_angry.jpg";
+import lovingImg from "./images/emotion_loving.jpg";*/
+
+// Character 對應圖片
+import catImg from "./images/cat.jpeg";
+import robotImg from "./images/robot.jpg";
+import pirateImg from "./images/pirate.jpg";
+import grandmaImg from "./images/grandma.png";
+
+// Emotion + Character 對照表
+/*const emotionImages = {
+  happy: happyImg,
+  sad: sadImg,
+  angry: angryImg,
+  loving: lovingImg,
+};*/
+
+const characterImages = {
+  cat: catImg,
+  robot: robotImg,
+  pirate: pirateImg,
+  grandma: grandmaImg,
+};
+
 
 const emotions = ["happy", "sad", "angry", "loving"];
 const characters = ["cat", "robot", "pirate", "grandma"];
@@ -71,29 +98,28 @@ function AIRewrite() {
             </div>
           </div>
 
-          {/* Character card */}
           <div className="col-4 d-flex align-items-stretch">
-            <div className="card">
-              <div className="pic">
-                              <img src={alpaca} alt="profile" />
-                            </div>
-              <div className="card-header">Select a Character</div>
-              <div className="card-body">
-                {characters.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setCharacter(c)}
-                    className={`btn btn-sm m-1 ${c === character ? "btn-success" : "btn-outline-success"}`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
-              <div className="card-footer">
-                <p className="text">Current: {character}</p>
-              </div>
-            </div>
-          </div>
+  <div className="card">
+    <div className="pic">
+      <img src={characterImages[character]} alt={character} />
+    </div>
+    <div className="card-header">Select a Character</div>
+    <div className="card-body">
+      {characters.map((c) => (
+        <button
+          key={c}
+          onClick={() => setCharacter(c)}
+          className={`btn btn-sm m-1 ${c === character ? "btn-success" : "btn-outline-success"}`}
+        >
+          {c}
+        </button>
+      ))}
+    </div>
+    <div className="card-footer">
+      <p className="text">Current: {character}</p>
+    </div>
+  </div>
+</div>
 
           {/* Prompt and Result card */}
           <div className="col-4 d-flex align-items-stretch">

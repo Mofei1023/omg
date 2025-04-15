@@ -69,7 +69,7 @@ function CreateUserPage() {
       }, 2000); // 2秒後跳轉
     } catch (err) {
       //console.error("❌ 註冊失敗", err);
-      setMessage("❌ 註冊失敗，請檢查 console 或 API 狀態");
+      setMessage("❌ 註冊失敗，使用者名稱已被使用");
     }
   };
 

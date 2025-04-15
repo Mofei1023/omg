@@ -59,7 +59,7 @@ function Login() {
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             Welcome Back
           </h2>
-          <p className="text-sm text-gray-600">Please log in to your account</p>
+          <p className="text-sm text-gray-600">登入就可以留言還有跟AI聊天！</p>
         </div>
         <form className="mt-6 space-y-4" onSubmit={handleFormSubmit}>
           <input

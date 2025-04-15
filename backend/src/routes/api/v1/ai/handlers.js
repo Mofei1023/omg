@@ -17,8 +17,8 @@ export async function rewriteText(req, res) {
     messages: [{ role: "user", content: fullPrompt }],
     temperature: 0.9,
     top_p: 0.95,
-    max_tokens: 30,
-  });
+    max_tokens: 15,
+  });a
 
   const reply = result.choices?.[0]?.message?.content || "⚠️ No response.";
   return res.json({ result: reply });

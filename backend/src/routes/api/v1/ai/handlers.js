@@ -33,7 +33,7 @@ export async function rewriteText(req, res) {
     });
 
     const data = await response.json();
-
+    console.log("✅ 完整回應內容：", JSON.stringify(data, null, 2));
     const reply = data.choices?.[0]?.message?.content;
     if (reply) {
       return res.json({ result: reply });

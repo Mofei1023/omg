@@ -18,7 +18,7 @@ export async function rewriteText(req, res) {
     temperature: 0.9,
     top_p: 0.95,
     max_tokens: 15,
-  });a
+  });
 
   const reply = result.choices?.[0]?.message?.content || "⚠️ No response.";
   return res.json({ result: reply });

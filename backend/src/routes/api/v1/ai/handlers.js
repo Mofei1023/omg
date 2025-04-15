@@ -22,7 +22,7 @@ export async function rewriteText(req, res) {
         "X-Title": "AlpacaAI CHAT"
       },
       body: JSON.stringify({
-        model: "openchat/openchat-7b",
+        model: "agentica-org/deepcoder-14b-preview:free",
         messages: [
           { role: "user", content: fullPrompt }
         ],
@@ -33,7 +33,8 @@ export async function rewriteText(req, res) {
     });
 
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || "⚠️ No response.";
+    console.log(data)
+    const reply = data.choices?.[0]?.message?.content || "⚠️ OPEN No response.";
     return res.json({ result: reply });
   } catch (orErr) {
     // fallback: Hugging Face
@@ -47,7 +48,7 @@ export async function rewriteText(req, res) {
         max_tokens: 100,
       });
 
-      const reply = result.choices?.[0]?.message?.content || "⚠️ No response.";
+      const reply = result.choices?.[0]?.message?.content || "⚠️ HF No response.";
       return res.json({ result: reply });
     } catch (hfErr) {
       return res.status(500).json({ error: "Both models failed to respond." });

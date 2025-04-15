@@ -22,7 +22,7 @@ export async function rewriteText(req, res) {
         "X-Title": "AlpacaAI CHAT"
       },
       body: JSON.stringify({
-        model: "agentica-org/deepcoder-14b-preview:free",
+        model: "openchat/openchat-7b",
         messages: [
           { role: "user", content: fullPrompt }
         ],

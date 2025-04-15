@@ -12,7 +12,7 @@ export async function rewriteText(req, res) {
   const fullPrompt = `Please reply in the tone of a ${emotion} ${character}: ${prompt}`;
 
   const result = await client.chatCompletion({
-    model: "mistralai/Mistral-7B-Instruct-v0.1",
+    model: "HuggingFaceH4/zephyr-7b-beta",
     provider: "hf-inference",
     messages: [{ role: "user", content: fullPrompt }],
     temperature: 0.9,
